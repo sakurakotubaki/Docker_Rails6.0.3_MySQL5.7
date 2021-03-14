@@ -73,7 +73,7 @@ volumes:
 ```
   
 ## プロジェクトフォルダの中でrails appを作成
-docker-compose run app rails new . --force --databas
+docker-compose run app rails new . --force --database=mysql
 
 ## db設定を変更します。
 - databse.yml
@@ -81,4 +81,13 @@ docker-compose run app rails new . --force --databas
 username: root
 password: root #docker-compose.ymlのMYSQL_ROOT_PASSWORD
 host: db #docker-compose.ymlのサービス名
+```
+## buildする
+$ docker-compose build
+
+## modelを作成
+```
+$ docker-compose run app rails g model List title:string description:string
+$ docker-compose run app rails db:create
+$ docker-compose run app rails db:migrate
 ```
