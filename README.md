@@ -10,6 +10,9 @@ mkdir Rails_MySQL5.7_Docker
 
 ## ファイルの用意
 Gemfile Gemfile.lock Dockerfile docker-compose.yml を作成します。
+```
+$ touch Gemfile Gemfile.lock Dockerfile docker-compose.yml
+```
 
 ## Gmefile
 source "https://rubygems.org"
