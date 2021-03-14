@@ -15,8 +15,10 @@ $ touch Gemfile Gemfile.lock Dockerfile docker-compose.yml
 ```
 
 ## Gmefile
+```
 source "https://rubygems.org"
 gem "rails", "6.0.3"
+```
 
 ## Gemfile.lock
 何も書かない。
