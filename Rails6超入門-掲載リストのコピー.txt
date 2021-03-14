@@ -1,0 +1,4512 @@
+﻿Ruby on Rails 6超入門　掲載リスト
+
+■■Chapter 2
+----------------------------------------------------------------------------
+
+
+▼リスト2-1
+class HelloController < ApplicationController
+end
+
+
+--------------------------------------
+
+
+▼リスト2-2
+class HelloController < ApplicationController
+
+
+  def index
+    render plain:"Hello, This is Rails sample page!"
+  end
+
+
+end
+
+
+--------------------------------------
+
+
+▼リスト2-4
+Rails.application.routes.draw do
+  get 'hello/index'
+  get 'hello', to: 'hello#index'
+end
+
+
+--------------------------------------
+
+
+▼リスト2-5
+class HelloController < ApplicationController
+
+
+  def index
+    msg = '
+    <html>
+    <body>
+      <h1>Sample Page</h1>
+      <p>this is Rails sample page!</p>
+    </body>
+    </html>
+    '
+    render html: msg
+  end
+
+
+end
+
+
+--------------------------------------
+
+
+▼リスト2-7
+render html: msg.html_safe
+
+
+--------------------------------------
+
+
+▼リスト2-8
+class HelloController < ApplicationController
+
+
+  def index
+    if params['msg'] != nil then
+      msg = 'Hello, ' + params['msg'] + '!'
+    else 
+      msg = 'this is sample page.'
+    end
+    html = '
+    <html>
+    <body>
+      <h1>Sample Page</h1>
+      <p>' + msg + '</p>
+    </body>
+    </html>
+    '
+    render html: html.html_safe
+  end
+
+
+end
+
+
+--------------------------------------
+
+
+▼リスト2-9
+<h1 class="display-4">Index page</h1>
+<p>this is sample page.</p>
+
+
+--------------------------------------
+
+
+▼リスト2-10
+body {
+  color: darkgray;
+  font-size:28px;
+}
+
+
+h1 {
+  color: darkgray;
+  margin: 25px 0px;
+}
+
+
+--------------------------------------
+
+
+▼リスト2-11
+<link rel="stylesheet" 
+  href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.css">
+
+
+--------------------------------------
+
+
+▼リスト2-12
+<body class="container">
+
+
+--------------------------------------
+
+
+▼リスト2-13
+class HelloController < ApplicationController
+
+
+  def index
+  end
+
+
+end
+
+
+--------------------------------------
+
+
+▼リスト2-14
+class HelloController < ApplicationController
+
+
+  def index
+    @title = "View Sample"
+    @msg = "コントローラーに用意した値です。"
+  end
+
+
+end
+
+
+--------------------------------------
+
+
+▼リスト2-15
+<h1 class="display-4"><%= @title %></h1>
+<p><%= @msg %></p>
+
+
+--------------------------------------
+
+
+▼リスト2-16
+class HelloController < ApplicationController
+
+
+  def index
+    if params['msg'] != nil then
+      @title = params['msg']
+    else
+      @title = 'index'
+    end
+    @msg ='this is redirect sample...'
+  end
+
+
+  def other
+    redirect_to action: :index, params: {'msg': 'from other page'}
+  end
+end
+
+
+--------------------------------------
+
+
+▼リスト2-17
+get 'hello/other'
+
+
+--------------------------------------
+
+
+▼リスト2-18
+<h1 class="display-4"><%= @title %></h1>
+<p><%= @msg %></p>
+<form method="POST" action="/hello/index">
+  <input type="text" class="form-control" 
+    name="input1" value="<%= @value %>">
+  <input type="submit" class="btn btn-primary">
+</form>
+
+
+--------------------------------------
+
+
+▼リスト2-19
+class HelloController < ApplicationController
+
+
+  def index
+    if request.post? then
+      @title = 'Result'
+      @msg = 'you typed: ' + params['input1'] + '.'
+      @value = params['input1']
+    else
+      @title = 'Index'
+      @msg = 'type text...'
+      @value = ''
+    end
+  end
+
+
+end
+
+
+--------------------------------------
+
+
+▼リスト2-20
+post 'hello', to: 'hello#index'
+post 'hello/index'
+
+
+--------------------------------------
+
+
+▼リスト2-21
+class HelloController < ApplicationController
+   protect_from_forgery
+
+
+  def index
+    if request.post? then
+      @title = 'Result'
+      @msg = 'you typed: ' + params['input1'] + '.'
+      @value = params['input1']
+    else
+      @title = 'Index'
+      @msg = 'type text...'
+      @value = ''
+    end
+  end
+
+
+end
+
+
+--------------------------------------
+
+
+▼リスト2-22
+<h1 class="display-4"><%= @title %></h1>
+<p><%= @msg %></p>
+<%= form_tag(controller: "hello", action: "index") do %>
+  <%= text_field_tag("input1") %>
+  <%= submit_tag("Click") %>
+<% end %>
+
+
+--------------------------------------
+
+
+▼リスト2-23
+protect_from_forgery
+
+
+--------------------------------------
+
+
+▼リスト2-24
+<h1 class="display-4"><%= @title %></h1>
+<p><%= @msg %></p>
+<%= form_tag(controller: "hello", action: "index") do %>
+  <%= text_field_tag("input1","", {class:"form-control"}) %>
+  <%= submit_tag("Click", {class:"btn btn-primary"}) %>
+<% end %>
+
+
+--------------------------------------
+
+
+▼リスト2-25
+<form action="/hello" accept-charset="UTF-8" method="post">
+  <input name="utf8" type="hidden" value="&#x2713;" />
+  <input type="hidden" name="authenticity_token" value="……ランダムな文字列……" />
+  <input type="text" name="input1" id="input1" />
+  <input type="submit" name="commit" value="Click" data-disable-with="Click" />
+</form>
+
+
+--------------------------------------
+
+
+▼リスト2-26
+<h1 class="display-4"><%= @title %></h1>
+<p><%= @msg %></p>
+<%= form_tag(controller: "hello", action: "index") do %>
+  <%= check_box_tag("check1") %>
+  <%= label_tag("check1", "check box") %>
+  <%= submit_tag("Click") %>
+<% end %>
+
+
+--------------------------------------
+
+
+▼リスト2-27
+class HelloController < ApplicationController
+
+
+  def index
+    if request.post? then
+      @title = 'Result'
+      if params['check1'] then
+        @msg = 'you Checked!!'
+      else
+        @msg = 'not checked...'
+      end
+    else
+      @title = 'Index'
+      @msg = 'check it...'
+    end
+  end
+
+
+end
+
+--------------------------------------
+
+
+▼リスト2-28
+<h1 class="display-4"><%= @title %></h1>
+<p><%= @msg %></p>
+<%= form_tag(controller: "hello", action: "index") do %>
+  <%= radio_button_tag("r1", "radio 1") %>
+  <%= label_tag("r1_radio_1", "Radio Button 1") %><br>
+  <%= radio_button_tag("r1", "radio 2") %>
+  <%= label_tag("r1_radio_2", "Radio Button 2") %><br>
+  <%= submit_tag("Click") %>
+<% end %>
+
+--------------------------------------
+
+
+▼リスト2-29
+class HelloController < ApplicationController
+
+
+  def index
+    if request.post? then
+      @title = 'Result'
+      if params['r1'] then
+        @msg = 'you selected: ' + params['r1']
+      else 
+        @msg = 'not selected...'
+      end
+    else
+      @title = 'Index'
+      @msg = 'select radio button...'
+    end
+  end
+
+
+end
+
+--------------------------------------
+
+
+▼リスト2-30
+<h1 class="display-4"><%= @title %></h1>
+<p><%= @msg %></p>
+<%= form_tag(controller: "hello", action: "index") do %>
+  <%= select_tag('s1', 
+    options_for_select(["Windows", "macOS", "Linux"])) %>
+  <%= submit_tag("Click") %>
+<% end %>
+
+--------------------------------------
+
+
+▼リスト2-31
+class HelloController < ApplicationController
+
+
+  def index
+    if request.post? then
+      @title = 'Result'
+      if params['s1'] then
+        @msg = 'you selected: '+ params['s1']
+      else 
+        @msg = 'not selected...'
+      end
+    else
+      @title = 'Index'
+      @msg = 'select List...'
+    end
+  end
+
+
+end
+
+--------------------------------------
+
+
+▼リスト2-32
+<h1 class="display-4"><%= @title %></h1>
+<p><%= @msg %></p>
+<%= form_tag(controller: "hello", action: "index") do %>
+  <%= select_tag('s1', 
+    options_for_select(["Windows", "macOS", "Linux"]),
+    {size:5, multiple:true, class:"form-control"}) %>
+  <%= submit_tag("Click") %>
+<% end %>
+
+--------------------------------------
+
+
+▼リスト2-33
+class HelloController < ApplicationController
+
+
+  def index
+    if request.post? then
+      @title = 'Result'
+      if params['s1'] then
+        @msg = 'you selected: '
+        for val in params['s1']
+          @msg += val + ' '
+        end
+      else 
+        @msg = 'not selected...'
+      end
+    else
+      @title = 'Index'
+      @msg = 'select radio button...'
+    end
+  end
+
+
+end
+
+--------------------------------------
+
+
+▼リスト2-34
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>RailsApp</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag 'application', media: 'all', 
+        'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 
+        'data-turbolinks-track': 'reload' %>
+  </head>
+
+
+  <body>
+    <%= yield %>
+  </body>
+</html>
+
+--------------------------------------
+
+
+▼リスト2-35
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= @title %></title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <link rel="stylesheet" 
+  href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.css">
+  <%= stylesheet_link_tag 'application', 
+    media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_pack_tag 'application', 
+    'data-turbolinks-track': 'reload' %>
+</head>
+
+
+<body class="container text-body">
+  <%= render template:'layouts/hello_header' %>
+  <%= yield %>
+  <%= render template:'layouts/hello_footer' %>
+</body>
+</html>
+
+--------------------------------------
+
+
+▼リスト2-36――hello_header.html.erb
+<h1 class="display-4 text-center mt-1 mb-4 text-primary">
+  <%= @header %>
+</h1>
+
+--------------------------------------
+
+
+▼リスト2-37――hello_footer.html.erb
+<div class="mt-5 text-right small text-dark border-bottom border-dark">
+  <%= @footer %>
+</div>
+
+--------------------------------------
+
+
+▼リスト2-38――index.html.erb
+<p><%= @msg %></p>
+
+--------------------------------------
+
+
+▼リスト2-39
+class HelloController < ApplicationController
+  layout 'hello'
+
+
+  def index
+    @header = 'layout sample'
+    @footer = 'copyright SYODA-Tuyano 2020.'
+    @title = 'New Layout'
+    @msg = 'this is sample page!'
+  end
+
+
+end
+
+--------------------------------------
+
+
+▼リスト2-40
+<%= form_tag(controller: "msgboard", action: "index") do %>
+  <div class="form-group">
+    <label for="name">名前</label>
+    <%= text_field_tag("name","",{class:"form-control"}) %>
+  </div>
+  <div class="form-group">
+    <label for="name">メール</label>
+    <%= text_field_tag("mail","",{class:"form-control"}) %>
+  </div>
+  <div class="form-group">
+    <label for="name">メッセージ</label>
+    <%= text_area_tag("msg","",{class:"form-control"}) %>
+  </div>
+  <%= submit_tag("Click", {class:"btn btn-primary"}) %>
+<% end %>
+
+
+<table class="table mt-4">
+  <tr>
+    <th style="width:50%">メッセージ</th>
+    <th>名前</th>
+    <th>メール</th>
+    <th>投稿日時</th>
+  </tr>
+  <% @msg_data.each do |key,obj| %>
+  <tr>
+    <td class="msg"><%= obj['msg'] %></td>
+    <td class="name"><%= obj['name'] %></td>
+    <td class="mail"><%= obj['mail'] %></td>
+    <td class="time"><%= Time.at(key.to_i) %></td>
+  </tr>
+  <% end %>
+</table>
+
+--------------------------------------
+
+
+▼リスト2-41
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= @title %></title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <link rel="stylesheet" 
+  href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.css">
+</head>
+
+
+<body class="container text-body">
+  <h1 class="mb-4 display-4 text-primary">MsgBoard</h1>
+  <%= yield %>
+  <div class="mt-4 text-center small text-dark border-top border-dark">
+  copyright SYODA-Tuyano. 2020</div>
+</body>
+</html>
+
+--------------------------------------
+
+
+▼リスト2-42
+class MsgboardController < ApplicationController
+  layout 'msgboard'
+
+
+  def initialize
+    super
+    begin
+      @msg_data = JSON.parse(File.read("data.txt"))
+    rescue
+      @msg_data = Hash.new
+    end
+    @msg_data.each do |key,obj|
+      if Time.now.to_i - key.to_i > 24*60*60 then
+        @msg_data.delete(key)
+      end
+    end
+    File.write("data.txt", @msg_data.to_json)
+  end
+
+
+  def index
+    if request.post? then
+      obj = MyData.new(msg:params['msg'], name:params['name'], 
+        mail:params['mail'])
+      @msg_data[Time.now.to_i] = obj
+      data = @msg_data.to_json
+      File.write("data.txt", data)
+      @msg_data = JSON.parse(data)
+    end
+  end
+
+
+end
+
+
+class MyData
+  attr_accessor :name
+  attr_accessor :mail
+  attr_accessor :msg
+
+
+  def initialize msg:msg, name:name, mail:mail
+    self.name = name
+    self.mail = mail
+    self.msg = msg
+  end
+end
+
+--------------------------------------
+
+
+▼リスト2-43
+get 'msgboard', to: 'msgboard#index'
+post 'msgboard', to: 'msgboard#index'
+get 'msgboard/index'
+post 'msgboard/index'
+
+--------------------------------------
+
+
+
+
+■■Chapter 3
+----------------------------------------------------------------------------
+
+
+▼リスト3-2
+create table sampledata (id integer, name text, mail text);
+
+
+--------------------------------------
+
+
+▼リスト3-3
+insert into sampledata values (1, 'taro', 'taro@yamada');
+insert into sampledata values (2, 'hanako', 'hanako@flower');
+insert into sampledata values (3, 'sachiko', 'sachico@happy');
+
+--------------------------------------
+
+
+▼リスト3-4
+select * from sampledata;
+
+
+--------------------------------------
+
+
+▼リスト3-5
+select * from sampledata where id = 1;
+
+--------------------------------------
+
+
+▼リスト3-6
+class Person < ApplicationRecord
+end
+
+--------------------------------------
+
+
+▼リスト3-7
+class CreatePeople < ActiveRecord::Migration[6.0]
+  def change
+    create_table :people do |t|
+      t.text :name
+      t.integer :age
+      t.text :mail
+
+
+      t.timestamps
+    end
+  end
+end
+
+
+--------------------------------------
+
+
+▼リスト3-8
+Person.create(name:'Taro', age:38, mail:'taro@yamada')
+Person.create(name:'Hanako', age:34, mail:'hanako@flower')
+Person.create(name:'sachiko', age:56, mail:'sachiko@happy')
+
+
+--------------------------------------
+
+
+▼リスト3-9
+class PeopleController < ApplicationController
+
+
+  def index
+    @msg = 'Person data.'
+    @data = Person.all
+  end
+
+
+end
+
+
+--------------------------------------
+
+
+▼リスト3-10
+<h1 class="display-4 text-primary">People#index</h1>
+<p><%= @msg %></p>
+<table class="table">
+  <tr>
+    <th>Id</th><th>Name</th><th>Age</th><th>Mail</th>
+  </tr>
+  <% @data.each do |obj| %>
+  <tr>
+    <td><%= obj.id %></td>
+    <td><%= obj.name %></td>
+    <td><%= obj.age %></td>
+    <td><%= obj.mail %></td>
+  </tr>
+  <% end %>
+</table>
+
+
+--------------------------------------
+
+
+▼リスト3-11
+get 'people', to: 'people#index'
+
+
+--------------------------------------
+
+
+▼リスト3-12
+def show
+  @msg = "Indexed data."
+  @data = Person.find(params[:id])
+end
+
+
+--------------------------------------
+
+
+▼リスト3-13
+<h1 class="display-4 text-primary">People#show</h1>
+<p><%= @msg %></p>
+<table class="table">
+  <tr><th>Id</th>
+    <td><%= @data.id %></td></tr>
+  <tr><th>Name</th>
+    <td><%= @data.name %></td></tr>
+  <tr><th>Age</th>
+    <td><%= @data.age %></td></tr>
+  <tr><th>Mail</th>
+    <td><%= @data.mail %></td></tr>
+  </tr>
+</table>
+
+
+--------------------------------------
+
+
+▼リスト3-14
+get 'people/:id', to: 'people#show'
+
+
+--------------------------------------
+
+
+▼リスト3-15
+<h1 class="display-4 text-primary">People#index</h1>
+<p><%= @msg %></p>
+<table class="table">
+  <tr>
+  <th>Id</th><th>Name</th>
+  </tr>
+  <% @data.each do |obj| %>
+  <tr>
+  <td><%= obj.id %></td>
+  <td><a href="/people/<%= obj.id %>">
+    <%= obj.name %></a></td>
+  </tr>
+  <% end %>
+</table>
+
+
+--------------------------------------
+
+
+▼リスト3-16
+<h1 class="display-4 text-primary">People#add</h1>
+<p><%= @msg %></p>
+<%=form_tag(controller:'people', action:'add') do %>
+  <div class="form-group">
+    <label for="name">Name</label>
+    <%= text_field_tag("name","",{class:"form-control"}) %>
+  </div>
+  <div class="form-group">
+    <label for="age">Age</label>
+    <%= text_field_tag("age","",{class:"form-control"}) %>
+  </div>
+  <div class="form-group">
+    <label for="mail">Mail</label>
+    <%= text_field_tag("mail","",{class:"form-control"}) %>
+  </div>
+  <input type="submit">
+  <% end %>
+
+
+--------------------------------------
+
+
+▼リスト3-17
+def add
+  @msg = "add new data."
+end
+
+
+def create
+  if request.post? then
+    obj = Person.create(
+      name: params['name'],
+      age:params['age'],
+      mail:params['mail']
+    )
+  end
+  redirect_to '/people'
+end
+
+
+--------------------------------------
+
+
+▼リスト3-18
+get 'people/add'
+post 'people/add', to: 'people#create'
+
+
+--------------------------------------
+
+
+▼リスト3-19
+<h1 class="display-4 text-primary">People#add</h1>
+<p><%= @msg %></p>
+<%= form_for(@person, url:{controller:'people', action:'create'}) do |form| %>
+  <div class="form-group">
+    <label for="name">Name</label>
+    <%= form.text_field :name, class:"form-control" %>
+  </div>
+  <div class="form-group">
+    <label for="age">Age</label>
+    <%= form.text_field :age, class:"form-control" %>
+  </div>
+  <div class="form-group">
+    <label for="mail">Mail</label>
+    <%= form.text_field :mail, class:"form-control" %>
+  </div>
+  <%= form.submit class:"btn btn-primary" %>
+  <% end %>
+
+
+--------------------------------------
+
+
+▼リスト3-20
+<form class="new_person" id="new_person" action="/people/add" 
+    accept-charset="UTF-8" method="post">
+  <input type="hidden" name="authenticity_token" value="……略……" />
+  <input class="form-control" type="text" 
+    name="person[name]" id="person_name" />
+  <input class="form-control" type="text" 
+    name="person[age]" id="person_age" />
+  <input class="form-control" type="text" 
+    name="person[mail]" id="person_mail" />
+  <input type="submit" name="commit" 
+    value="Create Person" class="btn btn-primary" 
+    data-disable-with="Create Person" />
+</form>
+
+
+--------------------------------------
+
+
+▼リスト3-21
+# 以下は、既にあるメソッドを修正する
+
+
+def add
+  @msg = "add new data."
+  @person = Person.new
+end
+
+
+def create
+  if request.post? then
+    Person.create(person_params)
+  end
+  redirect_to '/people'
+end
+
+
+# 以下は新たに追加するメソッド
+
+
+private
+def person_params
+  params.require(:person).permit(:name, :age, :mail)
+end
+
+
+--------------------------------------
+
+
+▼リスト3-22
+<h1 class="display-4 text-primary">People#index</h1>
+<p><%= @msg %></p>
+<table class="table">
+  <tr>
+  <th>Id</th><th>Name</th><th></th>
+  </tr>
+  <% @data.each do |obj| %>
+  <tr>
+  <td><%= obj.id %></td>
+  <td><a href="/people/<%= obj.id %>">
+    <%= obj.name %></a></td>
+  <td><a href="/people/edit/<%= obj.id %>">Edit</a></td>
+  </tr>
+  <% end %>
+</table>
+
+
+--------------------------------------
+
+
+▼リスト3-23
+<h1 class="display-4 text-primary">People#edit</h1>
+<p><%= @msg %></p>
+<%= form_for(@person, url:{controller:'people', 
+    action:'update',id:@person.id}) do |form| %>
+  <div class="form-group">
+    <label for="name">Name</label>
+    <%= form.text_field :name, class:"form-control" %>
+  </div>
+  <div class="form-group">
+    <label for="age">Age</label>
+    <%= form.text_field :age, class:"form-control" %>
+  </div>
+  <div class="form-group">
+    <label for="mail">Mail</label>
+    <%= form.text_field :mail, class:"form-control" %>
+  </div>
+  <%= form.submit class:"btn btn-primary" %>
+<% end %>
+
+
+--------------------------------------
+
+
+▼リスト3-24
+def edit
+  @msg = "edit data.[id = " + params[:id] + "]"
+  @person = Person.find(params[:id])
+end
+
+
+def update
+  obj = Person.find(params[:id])
+  obj.update(person_params)
+  redirect_to '/people'
+end
+
+--------------------------------------
+
+
+▼リスト3-25
+get 'people/edit/:id', to: 'people#edit'
+post 'people/edit/:id', to: 'people#update'
+
+
+--------------------------------------
+
+
+▼リスト3-26
+<h1 class="display-4 text-primary">People#index</h1>
+<p><%= @msg %></p>
+<table class="table">
+  <tr>
+  <th>Id</th><th>Name</th><th></th>
+  </tr>
+  <% @data.each do |obj| %>
+  <tr>
+  <td><%= obj.id %></td>
+  <td><a href="/people/<%= obj.id %>">
+    <%= obj.name %></a></td>
+  <td><a href="/people/edit/<%= obj.id %>">
+    Edit</a>&nbsp;&nbsp;
+  <a href="javascript:delData(<%= obj.id %>);">
+      Delete</a></td>
+  </tr>
+  <% end %>
+</table>
+<script>
+function delData(num){
+  if (confirm('このデータを削除しますか？')){
+    document.location = "/people/delete/" + num;
+  }
+  return false;
+}
+</script>
+
+
+--------------------------------------
+
+
+▼リスト3-27
+def delete
+  obj = Person.find(params[:id])
+  obj.destroy
+  redirect_to '/people'
+end
+
+--------------------------------------
+
+
+▼リスト3-28
+get 'people/delete/:id', to: 'people#delete'
+
+
+--------------------------------------
+
+
+▼リスト3-29
+class CreateCards < ActiveRecord::Migration[6.0]
+  def change
+    create_table :cards do |t|
+      t.text :title
+      t.text :author
+      t.integer :price
+      t.text :publisher
+      t.text :memo
+
+
+      t.timestamps
+    end
+  end
+end
+
+
+--------------------------------------
+
+
+▼リスト3-30
+class CardsController < ApplicationController
+  layout 'cards'
+
+  def index
+    @cards = Card.all
+  end
+
+  def show
+    @card = Card.find(params[:id])
+  end
+
+  def add
+    if request.post? then
+      Card.create(card_params)
+      goback
+    else
+      @card = Card.new
+    end
+  end
+
+  def edit
+    @card = Card.find(params[:id])
+    if request.patch? then
+      @card.update(card_params)
+      goback
+    end
+  end
+
+  def delete
+    Card.find(params[:id]).destroy
+    goback
+  end
+
+  private
+  def card_params
+    params.require(:card).permit(:title, :author, :price, :publisher, :memo)
+  end
+
+  def goback
+    redirect_to '/cards'
+  end
+
+end
+
+
+--------------------------------------
+
+
+▼リスト3-31
+<h1 class="display-4 text-primary">Cards#index</h1>
+<p>※現在、登録されているデータの一覧です。</p>
+<table class="table">
+  <tr>
+    <th>ID</th><th>題名</th>
+      <th>著者</th><th colspan="2"></th>
+  </tr>
+  <% @cards.each do |obj| %>
+  <tr>
+    <td width="35px"><%= obj.id %></td>
+    <td width="50%"><a href="/cards/<%= obj.id %>">
+      <%= obj.title %></a></td>
+    <td><%= obj.author %></td>
+    <td width="80px">
+      <a href="/cards/edit/<%= obj.id %>">
+      編集</a></td>
+    <td width="80px">
+      <a href="javascript:delData(
+        <%= (obj.id.to_s + ",'".to_s + 
+        obj.title.to_s).html_safe %>');">削除</a></td>
+  </tr>
+  <% end %>
+</table>
+<p><a href="/cards/add">
+    ※新しいデータを入力 &gt;&gt;</a></p>
+<script>
+function delData(id,title){
+  if (confirm('「' + title + '」のデータを削除しますか？')){
+    document.location = "/cards/delete/" + id;
+  }
+}
+</script>
+
+
+--------------------------------------
+
+
+▼リスト3-32
+<h1 class="display-4 text-primary">Cards#show</h1>
+<p>※「<%= @card.title %>」の読書データ</p>
+<table class="table">
+  <tr><th width="200">Id</th>
+    <td><%= @card.id %></td></tr>
+  <tr><th>タイトル</th>
+    <td><%= @card.title %></td></tr>
+  <tr><th>著者</th>
+    <td><%= @card.author %></td></tr>
+  <tr><th>価格</th>
+    <td><%= @card.price %>円</td></tr>
+  <tr><th>出版社</th>
+    <td><%= @card.publisher %></td></tr>
+  <tr><th>コメント</th>
+    <td><%= @card.memo %></td></tr>
+  </tr>
+</table>
+<p><a href="/cards">&lt;&lt; 
+    ※トップページに戻る</a></p>
+
+
+--------------------------------------
+
+
+▼リスト3-33
+<h1 class="display-4 text-primary">Cards#add</h1>
+<p>※登録する読書データを入力してください。</p>
+<%= form_for(@card, url:{controller:'cards', 
+    action:'add'}) do |form| %>
+  <div class="form-group">
+    <label for="title">タイトル</label>
+    <%= form.text_field :title,{class:"form-control"} %>
+  </div>
+  <div class="form-group">
+    <label for="author">著者</label>
+    <%= form.text_field :author,{class:"form-control"} %>
+  </div>
+  <div class="form-group">
+    <label for="price">価格</label>
+    <%= form.text_field :price,{class:"form-control"} %>
+  </div>
+  <div class="form-group">
+    <label for="publisher">出版社</label>
+    <%= form.text_field :publisher,{class:"form-control"} %>
+  </div>
+  <div class="form-group">
+    <label for="memo">コメント</label>
+    <%= form.text_area :memo, {rows:5,class:"form-control"} %>
+  </div>
+  <%= form.submit "保存" %>
+<% end %>
+<p class="link"><a href="/cards">
+    &lt;&lt; ※トップページに戻る</a></p>
+
+
+--------------------------------------
+
+
+▼リスト3-34
+<h1>Cards#edit</h1>
+<p>※「<%= @card.title %>」
+    の内容を編集します。</p>
+<%= form_for(@card, url:{controller:'cards', 
+    action:'edit', id:@card.id}) do |form| %>
+      <div class="form-group">
+      <label for="title">タイトル</label>
+      <%= form.text_field :title,{class:"form-control"} %>
+    </div>
+    <div class="form-group">
+      <label for="author">著者</label>
+      <%= form.text_field :author,{class:"form-control"} %>
+    </div>
+    <div class="form-group">
+      <label for="price">価格</label>
+      <%= form.text_field :price,{class:"form-control"} %>
+    </div>
+    <div class="form-group">
+      <label for="publisher">出版社</label>
+      <%= form.text_field :publisher,{class:"form-control"} %>
+    </div>
+    <div class="form-group">
+      <label for="memo">コメント</label>
+      <%= form.text_area :memo, {rows:5,class:"form-control"} %>
+    </div>
+    <%= form.submit "更新" %>
+  <% end %>
+  <p class="link"><a href="/cards">
+      &lt;&lt; ※トップページに戻る</a></p>
+
+
+--------------------------------------
+
+
+▼リスト3-35
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cards</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <link rel="stylesheet" 
+  href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.css">
+  <style>
+  h1 { margin:25px 0px; }
+  p { margin: 25px 0px; }
+  </style>
+</head>
+
+
+<body class="container">
+  <%= yield %>
+</body>
+</html>
+
+
+--------------------------------------
+
+
+▼リスト3-36
+get 'cards/index'
+get 'cards', to: 'cards#index'
+
+get 'cards/add'
+post 'cards/add'
+
+get 'cards/:id', to: 'cards#show'
+
+get 'cards/edit/:id', to: 'cards#edit'
+patch 'cards/edit/:id', to: 'cards#edit'
+
+get 'cards/delete/:id', to: 'cards#delete'
+
+
+--------------------------------------
+
+
+
+
+■■Chapter 4
+----------------------------------------------------------------------------
+
+
+▼リスト4-1
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>RailsApp</title>
+    <%= csrf_meta_tags %>
+    <link rel="stylesheet" 
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.css">
+    </head>
+    <%= stylesheet_link_tag 'people', media: 'all', 
+      'data-turbolinks-track': 'reload' %>
+  <body class="container">
+    <%= yield %>
+  </body>
+</html>
+
+
+--------------------------------------
+
+
+▼リスト4-2
+h1 { margin-bottom:25px; }
+p { margin: 10px 0px; }
+body { font-size:20px; }
+table { margin:25px 0px; }
+
+
+--------------------------------------
+
+
+▼リスト4-3
+<h1 class="display-4 text-primary">
+  People#Find</h1>
+<p><%= @msg %></p>
+<%= form_tag(controller: "people", action: "find") do %>
+<div class="form-group">
+  <label for="find">Find</label>
+  <%=text_field_tag("find",'', {class:"form-control"}) %>
+</div>
+<%= submit_tag("Click") %>
+<% end %>
+
+<table class="table">
+  <tr>
+    <th>Id</th><th>Name</th><th>Age</th><th>Mail</th>
+  </tr>
+  <% @people.each do |obj| %>
+  <tr>
+    <td><%= obj.id %></td>
+    <td><%= obj.name %></td>
+    <td><%= obj.age %></td>
+    <td><%= obj.mail %></td>
+  </tr>
+  <% end %>
+</table>
+
+
+--------------------------------------
+
+
+▼リスト4-4
+def find
+  @msg = 'please type search word...'
+  @people = Array.new
+  if request.post? then
+    obj = Person.find params['find']
+    @people.push obj
+  end
+end
+
+
+--------------------------------------
+
+
+▼リスト4-5
+get 'people/find'
+post 'people/find'
+
+
+--------------------------------------
+
+
+▼リスト4-6
+def find
+  @msg = 'please type search word...'
+  @people = Array.new
+  if request.post? then
+    @people = Person.where name: params[:find]
+  end
+end
+
+
+--------------------------------------
+
+
+▼リスト4-7
+def find
+  @msg = 'please type search word...'
+  @people = Array.new
+  if request.post? then
+    @people = Person.where "age >= ?", params[:find]
+  end
+end
+
+
+--------------------------------------
+
+
+▼リスト4-8
+def find
+  @msg = 'please type search word...'
+  @people = Array.new
+  if request.post? then
+    @people = Person.where "mail like ?", 
+      '%' + params[:find] + '%'
+  end
+end
+
+
+--------------------------------------
+
+
+▼リスト4-9
+def find
+  @msg = 'please type search word...'
+  @people = Array.new
+  if request.post? then
+    f = params[:find].split ','
+    @people = Person.where "age >= ? and age <= ?", f[0], f[1]
+  end
+end
+
+
+--------------------------------------
+
+
+▼リスト4-10
+def find
+  @msg = 'please type search word...'
+  @people = Array.new
+  if request.post? then
+    f = '%' + params[:find] + '%'
+    @people = Person.where "name like ? or mail like ?", f, f
+  end
+end
+
+
+--------------------------------------
+
+
+▼リスト4-11
+def find
+  @msg = 'please type search word...'
+  @people = Array.new
+  if request.post? then
+    f = '%' + params[:find] + '%'
+    result = Person.where "name like ? or mail like ?", f, f
+    @people.push result.first
+    @people.push result.last
+  end
+end
+
+
+--------------------------------------
+
+
+▼リスト4-12
+def find
+  @msg = 'please type search word...'
+  @people = Array.new
+  if request.post? then
+    f = params[:find].split(',')
+    @people = Person.find(f)
+  end
+end
+
+
+--------------------------------------
+
+
+▼リスト4-13
+def find
+  @msg = 'please type search word...'
+  @people = Array.new
+  if request.post? then
+    f = params[:find].split(',')
+    @people = Person.where('name like ?', 
+      '%' + params[:find] + '%').order 'age asc'
+    
+  end
+end
+
+
+--------------------------------------
+
+
+▼リスト4-14
+def find
+  @msg = 'please type search word...'
+  if request.post? then
+    f = params[:find].split(',')
+    @people = Person.all.limit(f[0]).offset(f[1])
+  else
+    @people = Person.all
+  end
+end
+
+
+--------------------------------------
+
+
+▼リスト4-15
+class Person < ApplicationRecord
+  validates :name, presence: true
+  validates :age, numericality: true
+end
+
+
+--------------------------------------
+
+
+▼リスト4-16
+def create
+  @person = Person.new person_params
+  if @person.save then
+    redirect_to '/people'
+  else
+    @msg = '入力に問題があります。'
+    render 'add'
+  end
+end
+
+
+--------------------------------------
+
+
+▼リスト4-17
+def create
+  @person = Person.new person_params
+  if @person.save then
+    redirect_to '/people'
+  else
+    re = ''
+    @person.errors.messages.each do |key, vals|
+      vals.each do |val|
+        re += '<span style="color:red">' + key.to_s + 
+        '</span> ' + val + '<br>'
+      end
+    end
+    @msg = re.html_safe
+    render 'add'
+  end
+end
+
+
+--------------------------------------
+
+
+▼リスト4-18
+class Person < ApplicationRecord
+  validates :name, presence: { message: 'は、必須項目です。' }
+  validates :age, numericality: { message: 'は、数字で入力ください。' }
+end
+
+
+--------------------------------------
+
+
+▼リスト4-19
+def create
+  @person = Person.new person_params
+  if @person.save then
+    redirect_to '/people'
+  else
+    render 'add'
+  end
+end
+
+
+--------------------------------------
+
+
+▼リスト4-20
+<% if @person.errors.any? %>
+<ul>
+  <% @person.errors.full_messages.each do |err| %>
+    <li><%= err %></li>
+  <% end %>
+</ul>
+<% end %>
+
+
+--------------------------------------
+
+
+▼リスト4-21
+class EmailValidator < ActiveModel::EachValidator
+
+  def validate_each(record, attribute, value)
+    unless value =~ /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
+      record.errors[attribute] << (options[:message] || "is not an email")
+    end
+  end
+
+
+end
+
+
+--------------------------------------
+
+
+▼リスト4-22
+class Person < ApplicationRecord
+  validates :name, presence: {message:'は、必須項目です。'}
+  validates :age, numericality: {message:'は、数字で入力ください。'}
+  validates :mail, email: {message:'はメールアドレスではありません。'}
+end
+
+
+--------------------------------------
+
+
+▼リスト4-23
+class Message < ApplicationRecord
+  validates :message, presence: {message:'を書いてください。'}
+end
+
+
+--------------------------------------
+
+
+▼リスト4-24
+class MessagesController < ApplicationController
+ layout 'messages'
+
+ def index
+   @msg = 'Message data.'
+   @data = Message.all
+ end
+
+ def show
+   @msg = "Indexed data."
+   @message = Message.find(params[:id])
+ end
+
+ def add
+   @msg = 'Message data.'
+   @message = Message.new
+ end
+
+ def create
+   @message = Message.new message_params
+   if @message.save then
+     redirect_to '/messages'
+   else
+     render 'add'
+   end
+ end
+
+ def edit
+   @msg = "edit data.[id = " + params[:id] + "]"
+   @message = Message.find(params[:id])
+ end
+
+ def update
+   obj = Message.find(params[:id])
+   obj.update(message_params)
+   redirect_to '/messages'
+ end
+
+ def delete
+   obj = Message.find(params[:id])
+   obj.destroy
+   redirect_to '/messages'
+ end
+
+ private
+ def message_params
+   params.require(:message).permit(:person_id, :title, :message)
+ end
+
+end
+
+
+--------------------------------------
+
+
+▼リスト4-25
+<!DOCTYPE html>
+<html>
+ <head>
+   <title>RailsApp</title>
+   <%= csrf_meta_tags %>
+ <link rel="stylesheet" 
+  href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.css">
+    <%= stylesheet_link_tag 'messages', 
+     'data-turbolinks-track': 'reload' %>
+ </head>
+
+ <body class="container">
+   <%= yield %>
+ </body>
+</html>
+
+
+--------------------------------------
+
+
+▼リスト4-26
+<h1 class="display-4 text-primary">
+  Messages#index</h1>
+<p><%= @msg %></p>
+<table class="table">
+  <tr>
+    <th>Id</th><th >title</th><th>person</th><th colspan="2"></th>
+  </tr>
+  <% @data.each do |obj| %>
+  <tr>
+    <td><%= obj.id %></td>
+    <td><a href="/messages/<%= obj.id %>"><%= obj.title %></a></td>
+    <td><%= obj.person_id %></td>
+    <td><a href="/messages/edit/<%= obj.id %>">Edit</a></td>
+    <td><a href="javascript:delData(<%= obj.id %>);">Delete</a></td>
+  </tr>
+  <% end %>
+</table>
+<script>
+function delData(num){
+  if (confirm('このデータを削除しますか？')){
+    document.location = "/messages/delete/" + num;
+  }
+  return false;
+}
+</script>
+
+
+--------------------------------------
+
+
+▼リスト4-27
+<h1 class="display-4 text-primary">
+    Messages#show</h1>
+<p><%= @msg %></p>
+<table class="table">
+  <tr><th>Id</th>
+    <td><%= @message.id %></td></tr>
+  <tr><th>Person</th>
+    <td><%= @message.person_id %></td></tr>
+  <tr><th>title</th>
+    <td><%= @message.title %></td></tr>
+  <tr><th>message</th>
+    <td><%= @message.message %></td></tr>
+  <tr><th>created</th>
+    <td><%= @message.created_at %></td></tr>
+  </tr>
+</table>
+
+
+--------------------------------------
+
+
+▼リスト4-28
+<h1 class="display-4 text-primary">
+    Messages#add</h1>
+<p><%= @msg %></p>
+<% if @message.errors.any? %>
+<ul>
+  <% @message.errors.full_messages.each do |err| %>
+    <li><%= err %></li>
+  <% end %>
+</ul>
+<% end %>
+<%= form_for(@message, url:{controller:'messages', action:'create'}) do |form| %>
+  <div class="form-group">
+    <label for="person_id">person ID</label>
+    <%= form.text_field :person_id,{class:"form-control"} %>
+  </div>
+  <div class="form-group">
+    <label for="title">title</label>
+    <%= form.text_field :title,{class:"form-control"} %>
+  </div>
+  <div class="form-group">
+    <label for="message">message</label>
+    <%= form.text_area :message, {rows:3,class:"form-control"} %>
+  </div>
+  <%= form.submit "作成" %></td>
+<% end %>
+
+
+--------------------------------------
+
+
+▼リスト4-29
+<h1 class="display-4 text-primary">
+    Messages#edit</h1>
+<p><%= @msg %></p>
+<% if @message.errors.any? %>
+<ul>
+  <% @message.errors.full_messages.each do |err| %>
+    <li><%= err %></li>
+  <% end %>
+</ul>
+<% end %>
+<%= form_for(@message, url:{controller:'messages', action:'update'}) do |form| %>
+  <div class="form-group">
+    <label for="person_id">person ID</label>
+    <%= form.text_field :person_id,{class:"form-control"} %>
+  </div>
+  <div class="form-group">
+    <label for="title">title</label>
+    <%= form.text_field :title,{class:"form-control"} %>
+  </div>
+  <div class="form-group">
+    <label for="message">message</label>
+    <%= form.text_area :message, {rows:3,class:"form-control"} %>
+  </div>
+  <%= form.submit "更新" %></td>
+<% end %>
+
+
+--------------------------------------
+
+
+▼リスト4-30
+get 'messages/index'
+get 'messages', to: 'messages#index'
+
+get 'messages/add'
+post 'messages/add', to: 'messages#create'
+
+get 'messages/edit/:id', to: 'messages#edit'
+patch 'messages/edit/:id', to: 'messages#update'
+
+get 'messages/delete/:id', to: 'messages#delete'
+get 'messages/:id', to: 'messages#show'
+
+
+--------------------------------------
+
+
+▼リスト4-31
+class Person < ApplicationRecord
+ has_one :message
+
+ validates :name, presence: {message:'は、必須項目です。'}
+ validates :age, numericality: {message:'は、数字で入力ください。'}
+ validates :mail, email: {message:'はメールアドレスではありません。'}
+end
+
+
+--------------------------------------
+
+
+▼リスト4-32
+<h1 class="display-4 text-primary">People#show</h1>
+<p><%= @msg %></p>
+<table class="table">
+  <tr><th>Id</th>
+   <td><%= @data.id %></td></tr>
+ <tr><th>Name</th>
+   <td><%= @data.name %></td></tr>
+ <tr><th>Age</th>
+   <td><%= @data.age %></td></tr>
+ <tr><th>Mail</th>
+   <td><%= @data.mail %></td></tr>
+ <tr><th>Message</th>
+   <td><%= @data.message != nil ? @data.message.title : 'none' %></td></tr>
+ </tr>
+</table>
+
+
+--------------------------------------
+
+
+▼リスト4-33
+class Person < ApplicationRecord
+ has_many :message
+
+ ……validatesは省略……
+end
+
+
+--------------------------------------
+
+
+▼リスト4-34
+<h1 class="display-4 text-primary">People#show</h1>
+<p><%= @msg %></p>
+<table class="table">
+  <tr><th>Id</th>
+    <td><%= @data.id %></td></tr>
+  <tr><th>Name</th>
+    <td><%= @data.name %></td></tr>
+  <tr><th>Age</th>
+    <td><%= @data.age %></td></tr>
+  <tr><th>Mail</th>
+    <td><%= @data.mail %></td></tr>
+  <tr><th>Message</th>
+    <td>
+    <% if @data.message != nil then %>
+      <% @data.message.each do |obj| %>
+        <%= '「' + obj.title + '」' %>
+      <% end %>
+    <% end %>
+    </td></tr>
+  </tr>
+</table>
+
+
+--------------------------------------
+
+
+▼リスト4-35
+class Message < ApplicationRecord
+ belongs_to :person
+
+ ……validatesは省略……
+end
+
+
+--------------------------------------
+
+
+▼リスト4-36
+<table class="table">
+  <tr>
+   <th>Id</th><th >title</th><th>person</th><th colspan="2"></th>
+ </tr>
+ <% @data.each do |obj| %>
+ <tr>
+   <td><%= obj.id %></td>
+   <td><a href="/messages/<%= obj.id %>"><%= obj.title %></a></td>
+   <td><%= obj.person.name %></td>
+   <td><a href="/messages/edit/<%= obj.id %>">Edit</a></td>
+   <td><a href="javascript:delData(<%= obj.id %>);">Delete</a></td>
+ </tr>
+ <% end %>
+</table>
+
+
+--------------------------------------
+
+
+▼リスト4-37
+class Mycontact < ApplicationRecord
+end
+
+
+--------------------------------------
+
+
+▼リスト4-38
+class Mycontact < ApplicationRecord
+  validates :name, presence: {message:'は、必須項目です。'}
+  validates :age, numericality: {message:'は、数字で入力ください。'}
+  validates :nationality, inclusion: {in: [true, false], message:'は、真偽値です。'}
+end
+
+
+--------------------------------------
+
+
+▼リスト4-39
+class CreateMycontacts < ActiveRecord::Migration[6.0]
+  def change
+    create_table :mycontacts do |t|
+      t.text :name
+      t.integer :age
+      t.boolean :nationality
+      t.text :mail
+
+      t.timestamps
+    end
+  end
+end
+
+
+--------------------------------------
+
+
+▼リスト4-40
+class MycontactsController < ApplicationController
+  before_action :set_mycontact, only: [:show, :edit, :update, :destroy]
+  ……以下略……
+
+
+--------------------------------------
+
+
+▼リスト4-41
+def set_mycontact
+  @mycontact = Mycontact.find(params[:id])
+end
+
+
+--------------------------------------
+
+
+▼リスト4-42
+def mycontact_params
+  params.require(:mycontact).permit(:name, :age, :nationality, :mail)
+end
+
+
+--------------------------------------
+
+
+▼リスト4-43――indexアクション（MycontactsControllerクラス）
+def index
+  @mycontacts = Mycontact.all
+end
+
+
+--------------------------------------
+
+
+▼リスト4-44――index.html.erb
+<p id="notice"><%= notice %></p>
+
+<h1>Mycontacts</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Age</th>
+      <th>Nationality</th>
+      <th>Mail</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+
+  <tbody>
+    <% @mycontacts.each do |mycontact| %>
+      <tr>
+        <td><%= mycontact.name %></td>
+        <td><%= mycontact.age %></td>
+        <td><%= mycontact.nationality %></td>
+        <td><%= mycontact.mail %></td>
+        <td><%= link_to 'Show', mycontact %></td>
+        <td><%= link_to 'Edit', edit_mycontact_path(mycontact) %></td>
+        <td><%= link_to 'Destroy', mycontact, method: :delete, 
+            data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Mycontact', new_mycontact_path %>
+
+
+--------------------------------------
+
+
+▼リスト4-45
+def show
+end
+
+
+--------------------------------------
+
+
+▼リスト4-46――newメソッド（MycontactsControllerクラス）
+def new
+  @mycontact = Mycontact.new
+end
+
+def create
+  @mycontact = Mycontact.new(mycontact_params)
+
+  respond_to do |format|
+    if @mycontact.save
+      format.html { redirect_to @mycontact, notice: 'Mycontact was successfully created.' }
+      format.json { render :show, status: :created, location: @mycontact }
+    else
+      format.html { render :new }
+      format.json { render json: @mycontact.errors, status: :unprocessable_entity }
+    end
+  end
+end
+
+
+--------------------------------------
+
+
+▼リスト4-47
+<h1>New Mycontact</h1>
+
+<%= render 'form', mycontact: @mycontact %>
+
+<%= link_to 'Back', mycontacts_path %>
+
+
+--------------------------------------
+
+
+▼リスト4-48
+<%= form_with(model: mycontact, local: true) do |form| %>
+  <% if mycontact.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(mycontact.errors.count, "error") %> 
+          prohibited this mycontact from being saved:</h2>
+
+      <ul>
+        <% mycontact.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_area :name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :age %>
+    <%= form.number_field :age %>
+  </div>
+
+  <div class="field">
+    <%= form.label :nationality %>
+    <%= form.check_box :nationality %>
+  </div>
+
+  <div class="field">
+    <%= form.label :mail %>
+    <%= form.text_area :mail %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
+
+
+--------------------------------------
+
+
+▼リスト4-49
+def edit
+end
+
+def update
+  respond_to do |format|
+    if @mycontact.update(mycontact_params)
+      format.html { redirect_to @mycontact, notice: 'Mycontact was successfully updated.' }
+      format.json { render :show, status: :ok, location: @mycontact }
+    else
+      format.html { render :edit }
+      format.json { render json: @mycontact.errors, status: :unprocessable_entity }
+    end
+  end
+end
+
+
+--------------------------------------
+
+
+▼リスト4-50
+<h1>Editing Mycontact</h1>
+
+<%= render 'form', mycontact: @mycontact %>
+
+<%= link_to 'Show', @mycontact %> |
+<%= link_to 'Back', mycontacts_path %>
+
+
+--------------------------------------
+
+
+▼リスト4-51
+def destroy
+  @mycontact.destroy
+  respond_to do |format|
+    format.html { redirect_to mycontacts_url, notice: 'Mycontact was successfully destroyed.' }
+    format.json { head :no_content }
+  end
+end
+
+
+--------------------------------------
+
+
+▼リスト4-52
+resources :mycontacts
+
+
+--------------------------------------
+
+
+▼リスト4-53――xxx_create_questions.rb
+class CreateQuestions < ActiveRecord::Migration[6.0]
+  def change
+    create_table :questions do |t|
+      t.text :title
+      t.text :content
+      t.text :name
+      t.boolean :finished
+
+      t.timestamps
+    end
+  end
+end
+
+
+--------------------------------------
+
+
+▼リスト4-54――xxx_create_answers.rb
+class CreateAnswers < ActiveRecord::Migration[6.0]
+  def change
+    create_table :answers do |t|
+      t.integer :question_id
+      t.text :content
+      t.text :name
+
+      t.timestamps
+    end
+  end
+end
+
+
+--------------------------------------
+
+
+▼リスト4-55――question.rb
+class Question < ApplicationRecord
+  has_many :answer
+
+  validates :content, :name, presence: {message:'は、必須項目です。'}
+end
+
+
+--------------------------------------
+
+
+▼リスト4-56――answer.rb
+class Answer < ApplicationRecord
+  belongs_to :question
+
+  validates :content, :name, presence: {message:'は、必須項目です。'}
+end
+
+
+--------------------------------------
+
+
+▼リスト4-57――/question/index.html.erb
+<p id="notice"><%= notice %></p>
+
+<h1 class="display-4 text-primary">
+    Questions</h1>
+
+<table class="table mt-5 mb-5">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Finished</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @questions.each do |question| %>
+      <tr>
+        <td><%= question.title %></td>
+        <td><%= question.finished ? '終了' : '受付中' %></td>
+        <td><%= link_to 'Show', question %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to '※新たに質問する', new_question_path %>
+
+
+--------------------------------------
+
+
+▼リスト4-58――/questions/new.html.erb
+<h1 class="display-4 text-primary">
+  New Question</h1>
+
+<%= render 'form', question: @question %>
+
+
+--------------------------------------
+
+
+▼リスト4-59――/questions/_form.html.erb
+<% if question.errors.any? %>
+  <div id="error_explanation">
+    <h2><%= pluralize(question.errors.count, "error") %> 
+      prohibited this question from being saved:</h2>
+    <ul>
+    <% question.errors.full_messages.each do |message| %>
+      <li><%= message %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%= form_for(question) do |f| %>
+  <div class="form-group">
+    <%= f.label :title %>
+    <%= f.text_field :title, class:"form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :content %>
+    <%= f.text_area :content, rows:5, class:"form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :name %>
+    <%= f.text_field :name, class:"form-control" %>
+  </div>
+
+  <%= f.hidden_field :finished, { value:false } %>
+
+  <div>
+    <%= f.submit %>
+  </div>
+<% end %>
+
+
+--------------------------------------
+
+
+▼リスト4-60――/questions/show.html.erb
+<p id="notice"><%= notice %></p>
+
+<h1 class="display-4 text-primary">Question & Answers</h1>
+
+<div class="jumbotron p-4 mb-4">
+  <h2 class="card-title">
+    <%= @question.title %>
+  </h2>
+  <p class="card-text">
+    <%= @question.content %>
+  </p>
+  <p class="blockquote-footer text-right">
+    <%= @question.name %>
+  </p>
+  <div class="<%= @question.finished ? 'text-danger' : 'text-primary' %>">
+    <%= @question.finished ? '終了' : '受付中' %>
+  </div>
+</div>
+
+<% if @question.finished? == false then %>
+  <div class="card p-3 mb-4">
+    <h3 class="h4 text-primary">※回答する</h3>
+    <%= render 'form2', answer: @answer %>
+  </div>
+<% end %>
+
+<h3 class="h4 text-primary">※これまで寄せられた回答</h3>
+
+<ul class="list-group">
+<% if @question.answer.count == 0 then %>
+  <p class="answer">※まだありません。</p>
+<% else %>
+  <% @question.answer.reverse_each do |re| %>
+    <li class="list-group-item">
+        <%= re.content + ' (' + re.name + ')' %>
+    </li>
+  <% end %>
+<% end %>
+</ul>
+
+
+--------------------------------------
+
+
+▼リスト4-61――/questions/_form2.html.erb
+<% if answer.errors.any? %>
+  <div id="error_explanation">
+    <h2><%= pluralize(answer.errors.count, "error") %> prohibited this answer from being saved:</h2>
+    <ul>
+    <% answer.errors.full_messages.each do |message| %>
+      <li><%= message %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%= form_for(answer) do |f| %>
+  <%= f.hidden_field :question_id, {value: answer.question_id} %>
+
+  <div class="form-group">
+    <%= f.label :name %>
+    <%= f.text_field :name, class:"form-control" %>
+  </div>
+  <div class="form-group">
+    <%= f.label :content %>
+    <%= f.text_area :content, rows:2, class:"form-control" %>
+  </div>
+  <%= f.submit %>
+<% end %>
+
+
+--------------------------------------
+
+
+▼リスト4-62――QuestionsControllerクラス
+class QuestionsController < ApplicationController
+  before_action :set_question, only: [:show, :edit, :update, :destroy]
+  layout 'Q&A'
+
+  def index
+    @questions = Question.all.order created_at: :desc
+  end
+
+  def show
+    @answer = Answer.new
+    @answer.question_id = params[:id]
+  end
+
+  def new
+    @question = Question.new
+  end
+
+  def edit
+    redirect_to '/questions'
+  end
+
+  def create
+    @question = Question.new(question_params)
+    respond_to do |format|
+      if @question.save
+        format.html { redirect_to '/questions'}
+        format.json { render :show, status: :created, location: @question }
+      else
+        format.html { render :new }
+        format.json { render json: @question.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def update
+    redirect_to '/questions'
+  end
+
+  def destroy
+    redirect_to '/questions'
+  end
+
+  private
+  def set_question
+    @question = Question.find(params[:id])
+  end
+
+  def question_params
+    params.require(:question).permit(:title, :content, :name, :finished)
+  end
+end
+
+
+--------------------------------------
+
+
+▼リスト4-63――AnswersControllerクラス
+class AnswersController < ApplicationController
+  before_action :set_answer, only: [:show, :edit, :update, :destroy]
+  layout 'Q&A'
+
+  def index
+    redirect_to '/questions'
+  end
+
+  def show
+    redirect_to '/questions'
+  end
+
+  def new
+    @answer = Answer.new
+  end
+
+  def edit
+    redirect_to '/questions'
+  end
+
+  def create
+    end_counter = 10 # 終了にする回答数
+    @answer = Answer.new(answer_params)
+    respond_to do |format|
+      if @answer.save
+        num = Answer.where('question_id = ?',@answer.question_id).count
+        if num >= end_counter then
+          q = Question.find @answer.question_id
+          q.finished = true
+          q.save
+        end
+        format.html {
+          redirect_to '/questions/' + @answer.question_id.to_s
+        }
+        format.json { render :show, status: :created, location: @answer }
+      else
+        format.html { render :new }
+        format.json { render json: @answer.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def update
+    redirect_to '/questions'
+  end
+
+  def destroy
+    redirect_to '/questions'
+  end
+
+  private
+  def set_answer
+    @answer = Answer.find(params[:id])
+  end
+
+  def answer_params
+    params.require(:answer).permit(:question_id, :content, :name)
+  end
+end
+
+
+--------------------------------------
+
+
+▼リスト4-64
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Q&A</title>
+    <%= csrf_meta_tags %>
+    <link rel="stylesheet" 
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.css">
+    <%= stylesheet_link_tag 'Q&A', media: 'all', 
+      'data-turbolinks-track': 'reload' %>
+  </head>
+  <body class="container">
+    <%= yield %>
+  </body>
+</html>
+
+
+--------------------------------------
+
+
+▼リスト4-65
+h1 { margin-bottom:25px; }
+p { margin: 10px 0px; }
+body { font-size:20px; }
+table { margin:25px 0px; }
+
+
+--------------------------------------
+
+
+
+
+■■Chapter 5
+----------------------------------------------------------------------------
+
+
+▼リスト5-1
+class HelloController < ApplicationController
+  def index
+  end
+end
+
+
+--------------------------------------
+
+
+▼リスト5-2
+<%= javascript_pack_tag 'hello_react' %>
+
+<h1 class="display-4 text-primary">
+  Hello#index</h1>
+<div id="hello"></div>
+
+
+--------------------------------------
+
+
+▼リスト5-3
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>RailsReactApp</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <link rel="stylesheet" 
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.css">
+    <%= stylesheet_link_tag 'application', media: 'all', 
+        'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 
+        'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body class="container">
+    <%= yield %>
+  </body>
+</html>
+
+
+--------------------------------------
+
+
+▼リスト5-4
+import React from 'react'
+import ReactDOM from 'react-dom'
+import PropTypes from 'prop-types'
+
+const Hello = props => (
+  <div>Hello {props.name}!</div>
+)
+
+Hello.defaultProps = {
+  name: 'David'
+}
+
+Hello.propTypes = {
+  name: PropTypes.string
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  ReactDOM.render(
+    <Hello name="React" />,
+    document.body.appendChild(document.createElement('div')),
+  )
+})
+
+
+--------------------------------------
+
+
+▼リスト5-5
+import React from 'react'
+import ReactDOM from 'react-dom'
+import PropTypes from 'prop-types'
+
+const Calc = props => {
+  let n = props.number;
+  let total = 0;
+  for (let i = 0;i <= n;i++){
+    total += i;
+  }
+  return (
+    <div>ゼロから {props.number} までの合計は、「{total} 」です。</div>
+  );
+}
+
+Calc.defaultProps = {
+  number: 0
+}
+
+Calc.propTypes = {
+  number: PropTypes.integer
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  let el = (<div>
+    <Calc number="100" />
+    <Calc number="200" />
+    <Calc number="300" />
+  </div>);
+  let dom = document.querySelector('#hello');
+  ReactDOM.render(el, dom);
+})
+
+
+--------------------------------------
+
+
+▼リスト5-6
+class Datum < ApplicationRecord
+  validates :name, presence:true
+  validates :mail, presence:true
+end
+
+
+--------------------------------------
+
+
+▼リスト5-7
+class CreateData < ActiveRecord::Migration[6.0]
+  def change
+    create_table :data do |t|
+      t.text :name
+      t.text :mail
+
+      t.timestamps
+    end
+  end
+end
+
+
+--------------------------------------
+
+
+▼リスト5-8
+Datum.create(id:1, name:'Taro', mail:'taro@yamada')
+Datum.create(id:2, name:'Hanako', mail:'hanako@flower')
+Datum.create(id:3, name:'Sachiko', mail:'sachiko@happy')
+
+
+--------------------------------------
+
+
+▼リスト5-9
+class DataController < ApplicationController
+  def index
+  end
+
+  def ajax
+    if params[:name] then
+      data = Datum.where 'name like ?', '%' + 
+          params[:name] + '%'
+    else
+      data = Datum.all
+    end
+    render plain:data.to_json
+  end
+  
+end
+
+
+--------------------------------------
+
+
+▼リスト5-10
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>RailsReactApp</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <link rel="stylesheet" 
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.css">
+    <%= stylesheet_link_tag 'application', media: 'all', 
+        'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 
+        'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body class="container">
+    <%= yield %>
+  </body>
+</html>
+
+
+--------------------------------------
+
+
+▼リスト5-11
+<%= javascript_pack_tag 'dummy_data' %>
+
+<h1 class="display-4 text-primary">
+  Data#index</h1>
+<div id="data"></div>
+
+
+--------------------------------------
+
+
+▼リスト5-12
+import React from 'react'
+import ReactDOM from 'react-dom'
+import PropTypes from 'prop-types'
+
+var target_dom = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+  target_dom = document.querySelector('#data');
+  const url = new URL(location.href);
+  let f = url.searchParams.get("name");
+  if (f == null){ f = ''; }
+  getData(f);
+});
+
+function getData(f){
+  let url = "http://localhost:3000/data/ajax";
+  if (f != ''){
+    url += '?name=' + f;
+  }
+  fetch(url)
+  .then(
+    res => res.json(),
+    (error) => {
+      const el = (
+        <p>ERROR!!</p>
+      );
+      ReactDOM.render(el, target_dom);
+    }
+  )
+  .then(
+    (result) => {
+      let arr = [];
+      for(let n in result){
+        let val = result[n];
+        arr.push(<li class="list-group-item">{val.id}:{val.name} ({val.mail})</li>);
+      }
+      const el = (
+        <ul class="list-group">{arr}</ul>
+      );
+      ReactDOM.render(el, target_dom);
+    },
+    (error) => {
+      const el = (
+        <p>ERROR!!</p>
+      );
+      ReactDOM.render(el, target_dom);
+    }
+  );
+}
+
+
+--------------------------------------
+
+
+▼リスト5-13
+def ajax
+  url = 'https://news.yahoo.co.jp/pickup/rss.xml'
+  uri = URI.parse(url)
+  response = Net::HTTP.get_response(uri)
+  render plain:Hash::from_xml(response.body).to_json
+end
+
+
+--------------------------------------
+
+
+▼リスト5-14
+import React from 'react'
+import ReactDOM from 'react-dom'
+import PropTypes from 'prop-types'
+
+var target_dom = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+  target_dom = document.querySelector('#data');
+  const url = new URL(location.href);
+  let f = url.searchParams.get("name");
+  if (f == null){ f = ''; }
+  getData(f);
+});
+
+function getData(f){
+  let url = "http://localhost:3000/data/ajax";
+  fetch(url)
+  .then(
+    res => res.json(),
+    (error) => {
+      const el = (
+        <p>ERROR!!</p>
+      );
+      ReactDOM.render(el, target_dom);
+    }
+  )
+  .then(
+    (result) => {
+      console.log(result);
+      let arr = [];
+      for(let n in result.rss.channel.item){
+        let data = result.rss.channel.item[n];
+        arr.push(
+          <tr>
+            <th>{data.title}</th>
+            <td class="small">{data.pubDate}</td>
+          </tr>
+        );
+      }
+      const el = (
+        <table class="table mt-4">
+          <thead class="thead-dark">
+          <tr><th><a href={data.link}>{data.title}</a></th>
+          <th>Date</th></tr>
+          </thead>
+          <tbody>{arr}</tbody>
+          </table>
+      );
+      ReactDOM.render(el, target_dom);
+    },
+    (error) => {
+      console.log(error);
+      const el = (
+        <p>ERROR!!</p>
+      );
+      ReactDOM.render(el, target_dom);
+    }
+  );
+}
+
+
+--------------------------------------
+
+
+▼リスト5-15
+gem 'devise'
+
+
+--------------------------------------
+
+
+▼リスト5-16
+<h1 class="display-4 text-primary">
+  Hello#index</h1>
+<p><%= @msg %></p>
+<hr>
+<div><%=link_to 'login_check page!&gt;&gt;'.html_safe,
+  {action:'login_check'} %></div>
+<div><%= link_to "Sign out&gt;&gt;".html_safe,
+  destroy_account_session_path, 
+  method: :delete %></div>
+
+
+--------------------------------------
+
+
+▼リスト5-17
+<h1 class="display-4 text-primary">
+  <%= @account.email %></h1>
+<p><%= @msg %></p>
+<hr>
+<div><%=link_to '&lt;&lt;go back'.html_safe,
+  {action:'index'} %></div>
+
+
+--------------------------------------
+
+
+▼リスト5-18
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>RailsDeviseApp</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <link rel="stylesheet" 
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.css">
+    <%= stylesheet_link_tag 'application', media: 'all', 
+        'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 
+        'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body class="container">
+    <%= yield %>
+  </body>
+</html>
+
+
+--------------------------------------
+
+
+▼リスト5-19
+class HelloController < ApplicationController
+  layout 'application'
+  before_action :authenticate_account!, only: :login_check
+ 
+  def index
+    @msg = 'this is sample page.'
+  end
+
+  def login_check
+    @account = current_account
+    @msg = 'account created at: ' + @account.created_at.to_s
+  end
+end
+
+
+--------------------------------------
+
+
+▼リスト5-20――/devise/sessions/new.html.erb
+<h2 class="display-4 text-primary">
+  Log in</h2>
+
+<%= form_for(resource, as: resource_name, 
+  url: session_path(resource_name)) do |f| %>
+  <div class="form-group">
+    <%= f.label :email %><br />
+    <%= f.email_field :email, class:'form-control', 
+      autofocus: true, autocomplete: "email" %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :password %><br />
+    <%= f.password_field :password, class:'form-control',
+      autocomplete: "current-password" %>
+  </div>
+
+  <% if devise_mapping.rememberable? %>
+    <div class="form-group">
+      <%= f.check_box :remember_me, class:'form-check-input' %>
+      <%= f.label :remember_me %>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit "Log in" %>
+  </div>
+<% end %>
+<hr>
+<%= render "devise/shared/links" %>
+
+
+--------------------------------------
+
+
+▼リスト5-21
+gem 'kaminari'
+
+
+--------------------------------------
+
+
+▼リスト5-22
+data = ['one','two','three','four','five','six','seven','eight','nine','ten','zero',
+  'white','black','gray','red','blue','green','yellow','cyan','magenta']
+
+for i in 1..100 do
+  DataPage.create data:data.sample
+end
+
+
+--------------------------------------
+
+
+▼リスト5-23
+# frozen_string_literal: true
+Kaminari.configure do |config|
+  # config.default_per_page = 25
+  # config.max_per_page = nil
+  # config.window = 4
+  # config.outer_window = 0
+  # config.left = 0
+  # config.right = 0
+  # config.page_method_name = :page
+  # config.param_name = :page
+  # config.params_on_first_page = false
+end
+
+
+--------------------------------------
+
+
+▼リスト5-24
+Kaminari.configure do |config|
+  config.default_per_page = 10
+  config.window = 3
+  config.outer_window = 1
+end
+
+
+--------------------------------------
+
+
+▼リスト5-25
+def index
+  @data_pages = DataPage.all
+end
+
+
+--------------------------------------
+
+
+▼リスト5-26
+def index
+  @data_pages = DataPage.page params[:page]
+end
+
+
+--------------------------------------
+
+
+▼リスト5-27
+<p id="notice"><%= notice %></p>
+
+<h1 class="display-4 text-primary">Data Pages</h1>
+
+<div class="mt-4 mb-4">
+  <%= page_entries_info @data_pages %>
+</div>
+
+<table class="table">
+<thead>
+  <tr>
+    <th>ID</th>
+     <th>Data</th>
+     <th>Created at</th>
+     <th colspan="3"></th>
+    </tr>
+</thead>
+
+<tbody>
+<% @data_pages.each do |data_page| %>
+  <tr>
+    <td><%= data_page.id %></td>
+    <td><%= data_page.data %></td>
+    <td><%= data_page.created_at %></td>
+    <td><%= link_to 'Show', data_page %></td>
+    <td><%= link_to 'Edit', edit_data_page_path(data_page) %></td>
+    <td><%= link_to 'Destroy', data_page, method: :delete, 
+        data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+<br>
+<div><%= paginate @data_pages %></div>
+<br>
+<%= link_to 'New Data Page', new_data_page_path %>
+
+
+--------------------------------------
+
+
+▼リスト5-28
+body { font-size:20px; }
+.page { padding:5px; border:1px lightblue solid; }
+.first { padding:5px; border:1px lightblue solid; }
+.prev { padding:5px; border:1px lightblue solid; }
+.next { padding:5px; border:1px lightblue solid; }
+.last { padding:5px; border:1px lightblue solid; }
+
+
+--------------------------------------
+
+
+▼リスト5-29――board_user.rb
+class BoardUser < ApplicationRecord
+  belongs_to :account
+  has_many :board_message
+
+  validates :nickname, presence: {message:'は、必須項目です。'}
+end
+
+
+--------------------------------------
+
+
+▼リスト5-30――board_message.rb
+class BoardMessage < ApplicationRecord
+  belongs_to :board_user
+
+  validates :content, presence: {message:'は、必須項目です。'}
+end
+
+
+--------------------------------------
+
+
+▼リスト5-31――board_users_controller.rb
+class BoardUsersController < ApplicationController
+  before_action :set_board_user, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_account!
+  # layout 'board_users' # 必要に応じて用意
+
+  def index
+    users = BoardUser.where 'account_id == ?', 
+        current_account.id
+    if users[0] == nil then
+      user = BoardUser.new
+      user.account_id = current_account.id
+      user.nickname = '<<no name>>'
+      user.save
+      users = BoardUser.where 'account_id == ?', 
+          current_account.id
+    end
+    @board_user = users[0]
+  end
+
+  def show
+    @board_user = BoardUser.find params[:id]
+  end
+
+  def new
+    redirect_to '/board_messages'
+  end
+
+  def edit
+    redirect_to '/board_messages'
+  end
+
+  def create
+    redirect_to '/board_messages'
+  end
+
+  def update
+    respond_to do |format|
+      if @board_user.update(board_user_params)
+        format.html { redirect_to '/board_messages' }
+        format.json { render :show, status: :ok, 
+            location: @board_user }
+      else
+        format.html { render :index }
+        format.json { render json: @board_user.errors, 
+            status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def destroy
+    redirect_to '/board_messages'
+  end
+
+  private
+  def set_board_user
+    @board_user = BoardUser.find(params[:id])
+  end
+
+  def board_user_params
+    params.require(:board_user).permit(:nickname, :account_id, :memo)
+  end
+end
+
+
+--------------------------------------
+
+
+▼リスト5-32――/board_users/index.html.erb
+<h1 class="display-4 text-primary">
+  User Home</h1>
+<h2 class="h4">※<%=@board_user.account.email %> さんの設定</h2>
+<%= render 'form', board_user: @board_user %>
+<hr>
+<p><%=link_to '<< go back', controller: :board_messages %></p>
+
+<hr>
+<div>copyright SYODA-Tuyano 2020.</div>
+
+
+--------------------------------------
+
+
+▼リスト5-33――/board_users/_form.html.erb
+<%= form_with(model: board_user, local: true) do |form| %>
+  <% if board_user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(board_user.errors.count, "error") %> 
+          prohibited this board_user from being saved:</h2>
+      <ul>
+        <% board_user.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <%= form.hidden_field :account_id %>
+
+  <div class="form-group">
+    <%= form.label :nickname %>
+    <%= form.text_field :nickname, class:'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :account_id %>
+    <div class="border p-1">
+      <%=@board_user.account_id %></div>
+    <%= form.hidden_field :account_id %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :memo %>
+    <%= form.text_area :memo, class:'form-control' %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
+
+
+--------------------------------------
+
+
+▼リスト5-34――/board_uers/show.html.erb
+<h1 class="display-4 text-primary">
+  "<%=@board_user.nickname %>"</h1>
+<table class="table">
+  <tr>
+    <th>Nickname</th>
+    <td><%= @board_user.nickname %></td>
+  </tr>
+  <tr>
+    <th>Id</th>
+    <td><%= @board_user.id %></td>
+  </tr>
+  <tr>
+    <th>Created at</th>
+    <td><%= @board_user.created_at %></td>
+  </tr>
+  <tr>
+    <th>Memo</th>
+    <td><%= @board_user.memo %></td>
+  </tr>
+</table>
+
+<hr>
+<%= link_to '<< Back', controller: :board_messages %>
+<hr>
+<div>copyright SYODA-Tuyano 2020.</div>
+
+
+--------------------------------------
+
+
+▼リスト5-35――board_messages_controller.rb
+class BoardMessagesController < ApplicationController
+  before_action :set_board_message, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_account!
+  layout 'board_messages'
+
+  def index
+    @board_messages = BoardMessage.page(params[:page]).order('created_at desc')
+    users = BoardUser.where('account_id == ?', current_account.id)[0]
+    if users == nil then
+      user = BoardUser.new
+      user.account_id = current_account.id
+      user.nickname = '<<no name>>'
+      user.save
+      users = BoardUser.where 'account_id == ?', current_account.id
+    end
+    @board_user = users
+    @board_message = BoardMessage.new
+    @board_message.board_user_id = @board_user.id
+  end
+
+  def show
+    redirect_to '/board_messages'
+  end
+
+  def new
+    redirect_to '/board_messages'
+  end
+
+  def edit
+    redirect_to '/board_messages'
+  end
+
+  def create
+    @board_messages = BoardMessage.page(params[:page]).order('created_at desc')
+    @board_message = BoardMessage.new(board_message_params)
+    @board_user = BoardUser.where('account_id == ?', current_account.id)[0]
+    respond_to do |format|
+      if @board_message.save
+        format.html { redirect_to '/board_messages' }
+        format.json { render :show, status: :created, location: @board_message }
+      else
+        format.html { render :index }
+        format.json { render json: @board_message.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def update
+    redirect_to '/board_messages'
+  end
+
+  def destroy
+    redirect_to '/board_messages'
+  end
+
+  private
+  def set_board_message
+    @board_message = BoardMessage.find(params[:id])
+  end
+
+  def board_message_params
+    params.require(:board_message).permit(:content, :board_user_id)
+  end
+end
+
+
+--------------------------------------
+
+
+▼リスト5-36――/board_messages/index.html.erb
+<p id="notice"><%= notice %></p>
+<h1 class="display-4 text-primary">Message Board</h1>
+<%= render 'form', board_message: @board_message %>
+<p><%= link_to 'go home >>', controller: :board_users %></p>
+<hr>
+<h2 class="h4">※Posted Messages.</h2>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Content</th>
+      <th width="200px">User</th>
+     </tr>
+  </thead>
+
+  <tbody>
+    <% @board_messages.each do |board_message| %>
+      <tr>
+        <td><%= board_message.content %></td>
+        <td><%=link_to board_message.board_user.nickname, 
+            controller: :board_users, action: :show, 
+            id:board_message.board_user_id  %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<br>
+<div><%= paginate @board_messages %></div>
+<hr>
+<div>copyright SYODA-Tuyano 2020.</div>
+
+
+--------------------------------------
+
+
+▼リスト5-37――/board_messages/_form.html.erb
+<%= form_with(model: board_message, local: true) do |form| %>
+  <% if board_message.errors.any? %>
+    <div id="error_explanation">
+      <h2 class="h4"><%= pluralize(board_message.errors.count, "error") %> 
+          prohibited this board_message from being saved:</h2>
+      <ul>
+        <% board_message.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :board_user_id %>
+    <div class="border p-1">
+      <%=@board_user.nickname %></div>
+    <%= form.hidden_field :board_user_id %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :content %>
+    <%= form.text_area :content, class:'form-control' %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
+
+
+--------------------------------------
+
+
+▼リスト5-38
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Board Messages</title>
+    <%= csrf_meta_tags %>
+    <link rel="stylesheet" 
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.css">
+    <%= stylesheet_link_tag 'board_messages', media: 'all', 
+      'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 
+      'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body class="container">
+    <%= yield %>
+    <div class="mt-5 text-center small text-scondary border-top border-scondary">
+    2020 SYODA-Tuyano.
+  </div>
+  </body>
+</html>
+
+
+--------------------------------------
+
+
+▼リスト5-39
+.page { padding:10px; }
+.first { padding:10px; }
+.prev { padding:10px; }
+.next { padding:10px; }
+.last { padding:10px; }
+
+
+--------------------------------------
+
+
+▼リスト5-40――Blogconfigクラス（blogconfig.rb）
+class Blogconfig < ApplicationRecord
+  validates :title, :stylename, presence: {message:'は、必須項目です。'}
+end
+
+
+--------------------------------------
+
+
+▼リスト5-41――Bloggenreクラス（bloggenre.rb）
+class Bloggenre < ApplicationRecord
+  has_many :blogpost
+
+  validates :name, presence: {message:'は、必須項目です。'}
+end
+
+
+--------------------------------------
+
+
+▼リスト5-42――Blogpostクラス（blogpost.rb）
+class Blogpost < ApplicationRecord
+  belongs_to :bloggenre
+  has_rich_text :content
+  
+  validates :title, :content, presence: {message:'は、必須項目です。'}
+end
+
+
+--------------------------------------
+
+
+▼リスト5-43
+class BlogconfigsController < ApplicationController
+  layout 'blog'
+
+  def index
+    @blogconfig = Blogconfig.find 1
+  end
+
+  def edit
+    @blogconfig = Blogconfig.find 1
+    if request.patch? then
+      @blogconfig.update blogconfig_params
+      redirect_to '/blogconfigs'
+    end
+  end
+
+  private
+  def blogconfig_params
+    params.require(:blogconfig).permit(:title, :subtitle, :stylename)
+  end
+
+end
+
+
+--------------------------------------
+
+
+▼リスト5-44
+class BloggenresController < ApplicationController
+  layout 'blog'
+
+  def index
+    @data = Bloggenre.all
+  end
+
+  def add
+    @bloggenre = Bloggenre.new
+    if request.post? then
+      @bloggenre = Bloggenre.create bloggenre_params
+      redirect_to '/bloggenres'
+    end
+  end
+
+  def edit
+    @bloggenre = Bloggenre.find params[:id]
+    if request.patch? then
+      @bloggenre.update bloggenre_params
+      redirect_to '/bloggenres'
+    end
+  end
+
+  private
+  def bloggenre_params
+    params.require(:bloggenre).permit(:name, :memo)
+  end
+
+end
+
+
+--------------------------------------
+
+
+▼リスト5-45
+class BlogpostsController < ApplicationController
+  layout 'blog'
+
+  def index
+    @data = Blogpost.all.order('created_at desc')
+  end
+
+  def add
+    @blogpost = Blogpost.new
+    @genres = Bloggenre.all
+    if request.post? then
+      @blogpost = Blogpost.create blogposts_params
+      redirect_to '/blogposts'
+    end
+  end
+
+  def edit
+    @blogpost = Blogpost.find params[:id]
+    @genres = Bloggenre.all
+    if request.patch? then
+      @blogpost.update blogposts_params
+      redirect_to '/blogposts'
+    end
+  end
+
+  def delete
+    @blogpost = Blogpost.find(params[:id])
+    if request.post? then
+      @blogpost.destroy
+      redirect_to '/blogposts'
+    end
+  end
+
+  private
+  def blogposts_params
+    params.require(:blogpost).permit(:title, :read, :content, :bloggenre_id)
+  end
+
+end
+
+
+--------------------------------------
+
+
+▼リスト5-46――blog.html.erb
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>RailsApp</title>
+    <%= csrf_meta_tags %>
+    <link rel="stylesheet" 
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.css">
+    <%= stylesheet_link_tag 'blog', media: 'all', 
+      'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag 'actiontext', media: 'all', 
+      'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 
+      'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body class="container">
+    <%= yield %>
+    <div class="mt-5 text-center small text-scondary border-top border-scondary">
+    2020 SYODA-Tuyano.
+  </div>
+  </body>
+</html>
+
+
+--------------------------------------
+
+
+▼リスト5-47
+h1 { margin-bottom:25px; }
+p { margin: 10px 0px; }
+body { font-size:20px; }
+table { margin:25px 0px; }
+
+
+--------------------------------------
+
+
+▼リスト5-48――index.html.erb
+<h1 class="display-4 text-primary">
+  Blogconfigs#index</h1>
+<p>※ブログの設定内容</p>
+<table class="table">
+  <tr><th>Title</th>
+    <td><%= @blogconfig.title %></td></tr>
+  <tr><th>Subtitle</th>
+    <td><%= @blogconfig.subtitle %></td></tr>
+  <tr><th>Style Name</th>
+    <td><%= @blogconfig.stylename %></td></tr>
+  </tr>
+</table>
+<p><a href="/blogconfigs/edit">編集画面＞＞</a></p>
+
+
+--------------------------------------
+
+
+▼リスト5-49――edit.html.erb
+<h1 class="display-4 text-primary">
+  Blogconfigs#edit</h1>
+<p>※ブログ設定の編集</p>
+<% if @blogconfig.errors.any? %>
+<ul>
+  <% @blogconfig.errors.full_messages.each do |err| %>
+    <li><%= err %></li>
+  <% end %>
+</ul>
+<% end %>
+<%= form_for(@blogconfig, url:{controller:'blogconfigs', action:'edit'}) do |form| %>
+  <div class="form-group">
+    <label for="title">Title</label>
+    <%= form.text_field :title,{class:"form-control"} %>
+  </div>
+  <div class="form-group">
+    <label for="subtitle">Sub Title</label>
+    <%= form.text_field :subtitle,{class:"form-control"} %>
+  </div>
+  <div class="form-group">
+    <label for="stylename">Style</label>
+    <%= form.text_field :stylename,{class:"form-control"} %>
+  </div>
+  <td><%= form.submit "更新" %></td></tr>
+<% end %>
+
+
+--------------------------------------
+
+
+▼リスト5-50――index.html.erb
+<h1 class="display-4 text-primary">
+  Bloggenres#index</h1>
+<p>※ジャンル・データの一覧</p>
+<table class="table">
+  <tr>
+    <th>Id</th><th >name</th><th>memo</th><th></th>
+  </tr>
+  <% @data.each do |obj| %>
+  <tr>
+    <td><%= obj.id %></td>
+    <td><%= obj.name %></td>
+    <td><%= obj.memo %></td>
+    <td><a href="/bloggenres/<%= obj.id %>">Edit</a></td>
+  </tr>
+  <% end %>
+</table>
+<p><a href="/bloggenres/add">新規作成＞＞</a></p>
+
+
+--------------------------------------
+
+
+▼リスト5-51――add.html.erb
+<h1 class="display-4 text-primary">
+    Bloggenres#add</h1>
+<p>※ジャンル・データの作成</p>
+<% if @bloggenre.errors.any? %>
+<ul>
+  <% @bloggenre.errors.full_messages.each do |err| %>
+    <li><%= err %></li>
+  <% end %>
+</ul>
+<% end %>
+<%= form_for(@bloggenre, url:{controller:'bloggenres', 
+    action:'add'}) do |form| %>
+  <div class="form-group">
+    <label for="name">Name</label>
+    <%= form.text_field :name,{class:"form-control"} %>
+  </div>
+  <div class="form-group">
+    <label for="memo">Memo</label>
+    <%= form.text_field :memo,{class:"form-control"} %>
+  </div>
+  <td><%= form.submit "作成" %></td></tr>
+<% end %>
+
+
+--------------------------------------
+
+
+▼リスト5-52――edit.html.erb
+<h1 class="display-4 text-primary">
+    Bloggenres#edit</h1>
+<p>※「<%= @bloggenre.name %>」ジャンルの編集</p>
+<% if @bloggenre.errors.any? %>
+<ul>
+  <% @bloggenre.errors.full_messages.each do |err| %>
+    <li><%= err %></li>
+  <% end %>
+</ul>
+<% end %>
+<%= form_for(@bloggenre, url:{controller:'bloggenres', 
+    action:'edit'}) do |form| %>
+  <div class="form-group">
+    <label for="name">Name</label>
+    <%= form.text_field :name,{class:"form-control"} %>
+  </div>
+  <div class="form-group">
+    <label for="memo">Memo</label>
+    <%= form.text_field :memo,{class:"form-control"} %>
+  </div>
+  <td><%= form.submit "更新" %></td></tr>
+<% end %>
+
+
+--------------------------------------
+
+
+▼リスト5-53――index.html.erb
+<h1 class="display-4 text-primary">
+    Blogposts#index</h1>
+<p>※投稿記事の一覧</p>
+<table class="table">
+  <tr>
+    <th>Id</th><th >title</th><th>read</th>
+      <th>genre</th><th colspan="2"></th>
+  </tr>
+  <% @data.each do |obj| %>
+  <tr>
+    <td><%= obj.id %></td>
+    <td><%= obj.title %></td>
+    <td><%= obj.read %></td>
+    <td><%= obj.bloggenre.name %></td>
+    <td><a href="/blogposts/<%= obj.id %>">
+        Edit</a></td>
+    <td><a href="/blogposts/delete/<%= obj.id %>">
+        Delete</a></td>
+  </tr>
+  <% end %>
+</table>
+<p><a href="/blogposts/add">新規作成＞＞</a></p>
+
+
+--------------------------------------
+
+
+▼リスト5-54――add.html.erb
+<h1 class="display-4 text-primary">Blogposts#add</h1>
+<p>※ブログの記事の投稿</p>
+<% if @blogpost.errors.any? %>
+<ul>
+  <% @blogpost.errors.full_messages.each do |err| %>
+    <li><%= err %></li>
+  <% end %>
+</ul>
+<% end %>
+<%= form_for(@blogpost, url:{controller:'blogposts', 
+    action:'add'}) do |form| %>
+  <div class="form-group">
+    <label for="title">Title</label>
+    <%= form.text_field :title,{class:"form-control"} %>
+  </div>
+  <div class="form-group">
+    <label for="read">Read</label>
+    <%= form.text_field :read,{class:"form-control"} %>
+  </div>
+  <div class="form-group">
+    <label for="content">Content</label>
+    <%= form.rich_text_area :content %>
+  </div>
+  <div class="form-group">
+    <label for="bloggenre_id">Genre ID</label>
+    <%= form.text_field :bloggenre_id,
+        {class:"form-control"} %>
+  </div>
+  <%= form.submit "作成" %>
+<% end %>
+<h5 class="mt-4 text-primary">※ジャンルの一覧</h5>
+<table class="table">
+  <tr>
+    <th>Id</th><th >Genre</th>
+  </tr>
+  <% @genres.each do |obj| %>
+  <tr>
+    <td><%= obj.id %></td>
+    <td><%= obj.name %></td>
+  </tr>
+  <% end %>
+</table>
+
+
+--------------------------------------
+
+
+▼リスト5-55――edit.html.erb
+<h1 class="display-4 text-primary">Blogposts#edit</h1>
+<p>※「<%= @blogpost.title %>」の編集</p>
+<% if @blogpost.errors.any? %>
+<ul>
+  <% @blogpost.errors.full_messages.each do |err| %>
+    <li><%= err %></li>
+  <% end %>
+</ul>
+<% end %>
+<%= form_for(@blogpost, url:{controller:'blogposts', 
+    action:'edit'}) do |form| %>
+  <div class="form-group">
+    <label for="title">Title</label>
+    <%= form.text_field :title,{class:"form-control"} %>
+  </div>
+  <div class="form-group">
+    <label for="read">Read</label>
+    <%= form.text_field :read,{class:"form-control"} %>
+  </div>
+  <div class="form-group">
+    <label for="content">Content</label>
+    <%= form.rich_text_area :content %>
+  </div>
+  <div class="form-group">
+    <label for="bloggenre_id">Genre ID</label>
+    <%= form.text_field :bloggenre_id,
+        {class:"form-control"} %>
+  </div>
+  <td><%= form.submit "更新" %></td></tr>
+<% end %>
+<h5 class="mt-4 text-primary">※ジャンルの一覧</h5>
+<table class="table">
+  <tr>
+    <th>Id</th><th >Genre</th>
+  </tr>
+  <% @genres.each do |obj| %>
+  <tr>
+    <td><%= obj.id %></td>
+    <td><%= obj.name %></td>
+  </tr>
+  <% end %>
+</table>
+
+
+--------------------------------------
+
+
+▼リスト5-56――delete.html.erb
+<h1 class="display-4 text-primary">
+    Blogposts#delete</h1>
+<p>※以下を削除してもいいですか？</p>
+<table class="table">
+  <tr><th>Id</th>
+    <td><%= @blogpost.id %></td></tr>
+  <tr><th>title</th>
+    <td><%= @blogpost.title %></td></tr>
+  <tr><th>read</th>
+    <td><%= @blogpost.read %></td></tr>
+  <tr><th>content</th>
+    <td><%= @blogpost.content %></td></tr>
+</table>
+<%= form_tag controller: "blogposts", 
+    action: "delete" do %>
+  <%= hidden_field_tag "id", {value: @blogpost.id} %>
+  <%= submit_tag "削除" %>
+<% end %>
+
+
+--------------------------------------
+
+
+▼リスト5-57
+class BlogsController < ApplicationController
+  layout 'blogs'
+
+  def index
+    @data = Blogpost.order('created_at desc')
+        .page params[:page]
+    @blogconfig = Blogconfig.find 1
+  end
+
+  def genre
+    @genre = Bloggenre.find params[:id]
+    @data = Blogpost.where('bloggenre_id = ?',params[:id])
+      .order('created_at desc').page params[:page]
+    @blogconfig = Blogconfig.find 1
+  end
+
+  def show
+    @blogpost = Blogpost.find params[:id]
+    @blogconfig = Blogconfig.find 1
+  end
+
+end
+
+
+--------------------------------------
+
+
+▼リスト5-58――index.html.erb
+<% @data.each do |obj| %>
+  <h3><a href="/blogs/show/<%= obj.id %>">
+    <%= obj.title %></a></h3>
+  <p><%= obj.read %><span class="top_created">
+    (<%= obj.created_at %>)</span></p>
+  <hr>
+<% end %>
+<div class="navigate">
+<div><%= paginate @data %></div>
+</div>
+
+
+--------------------------------------
+
+
+▼リスト5-59――genre.html.erb
+<h2 class="h3 mb-4">
+    ※「<%= @genre.name %>」の投稿</h2>
+<% @data.each do |obj| %>
+  <h4><a href="/blogs/show/<%= obj.id %>">
+    <%= obj.title %></a></h4>
+  <p><%= obj.read %><span class="created">
+    (<%= obj.created_at %>)</span></p>
+  <hr>
+<% end %>
+<div class="navigate mt-4">
+  <div><%= paginate @data %></div>
+</div>
+
+
+--------------------------------------
+
+
+▼リスト5-60――show.html.erb
+<h2 class="mb-5"><%= @blogpost.title %></h2>
+<p><%= @blogpost.read + ' [' + 
+    @blogpost.bloggenre.name + ']' %></p>
+<%= @blogpost.content %>
+<p class="show_created">
+    (<%= @blogpost.created_at %>)</p>
+
+
+--------------------------------------
+
+
+▼リスト5-61――blogs.html.erb
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>RailsApp</title>
+    <%= csrf_meta_tags %>
+    <link rel="stylesheet" 
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.css">
+    <%= stylesheet_link_tag 'blogs', 
+      'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag @blogconfig.stylename, 
+      'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body class="container">
+    <header id="header">
+      <h1 class="display-4 mb-4"><a href="/blogs">
+        <%= @blogconfig.title %></a></h1>
+      <h2 class="h4 mb-4"><%= @blogconfig.subtitle %></h2>
+    </header>
+    <hr>
+    <div id="side">
+    <% Bloggenre.all.each do |genre| %>
+      <p><a href="/blogs/genre/<%= genre.id %>">
+        <%= genre.name %></a></p>
+    <% end %>
+    </div>
+    <main id="main">
+    <%= yield %>
+    </main>
+  </body>
+</html>
+
+
+--------------------------------------
+
+
+▼リスト5-62
+.page { padding:10px; }
+.first { padding:10px; }
+.prev { padding:10px; }
+.next { padding:10px; }
+.last { padding:10px; }
+
+
+--------------------------------------
+
+
+▼リスト5-63――gray.scss
+body {
+  color: darkgray; font-size: 14pt; 
+  margin: 10px 20px;
+}
+#header {}
+#main {
+  width: 75%; float: left;
+}
+#side {
+  width: 20%; float: right;
+}
+
+a {
+  color: darkgray;
+  text-decoration: none;
+}
+a:hover {
+  color: darkgray;
+  text-decoration: underline;
+}
+
+
+--------------------------------------
+
+
+▼リスト5-64――red.scss
+body {
+  background-color: #ffcccc;
+  color: #aa0000; font-size: 14pt; 
+  margin: 10px 20px;
+}
+#header {}
+#main {
+  width: 75%; float: left;
+}
+#side {
+  width: 20%; float: right;
+}
+
+a {
+  color: #990000;
+  text-decoration: none;
+}
+a:hover {
+  color: #990000;
+  text-decoration: underline;
+}
+
+
+--------------------------------------
+
+
+▼リスト5-65
+get 'blogs/index'
+get 'blogs', to: 'blogs#index'
+get 'blogs/:page', to: 'blogs#index'
+
+get 'blogs/genre/:id', to: 'blogs#genre'
+get 'blogs/genre/:id/:page', to: 'blogs#genre'
+
+get 'blogs/show/:id', to: 'blogs#show'
+
+get 'blogposts/index'
+get 'blogposts', to: 'blogposts#index'
+
+get 'blogposts/delete/:id', to: 'blogposts#delete'
+post 'blogposts/delete', to: 'blogposts#delete'
+post 'blogposts/delete/:id', to: 'blogposts#delete'
+
+get 'blogposts/add'
+post 'blogposts/add'
+
+get 'blogposts/:id', to: 'blogposts#edit'
+patch 'blogposts/:id', to: 'blogposts#edit'
+
+get 'blogposts/delete'
+
+get 'bloggenres/index'
+get 'bloggenres', to: 'bloggenres#index'
+
+get 'bloggenres/add'
+post 'bloggenres/add'
+
+get 'bloggenres/:id', to: 'bloggenres#edit'
+patch 'bloggenres/:id', to: 'bloggenres#edit'
+
+get 'blogconfigs/index'
+get 'blogconfigs', to: 'blogconfigs#index'
+
+get 'blogconfigs/edit'
+patch 'blogconfigs/edit'
+
+
+--------------------------------------
+
+
+
+
+■■Addendum
+----------------------------------------------------------------------------
+
+
+▼リストA-1
+a = 10
+b = 20
+c= a + b
+
+
+--------------------------------------
+
+
+▼リストA-2
+a = 10
+b = 20
+c= a + b
+puts "答え：" + c.to_s
+
+
+--------------------------------------
+
+
+▼リストA-3
+x = 12345
+if x % 2 == 0 then
+  puts x.to_s + 'は、偶数。'
+else
+  puts x.to_s + 'は、奇数。'
+
+end
+
+
+--------------------------------------
+
+
+▼リストA-4
+x = 8 
+
+case x
+when 1..2
+  puts(x.to_s + '月は冬です。')
+when 3..5
+  puts(x.to_s + '月は春です。')
+when 6..8
+  puts(x.to_s + '月は夏です。')
+when 9..11
+  puts(x.to_s + '月は秋です。')
+when 12
+  puts(x.to_s + '月は師走です。')
+else
+  puts('値が正しくありません。')
+end
+
+
+--------------------------------------
+
+
+▼リストA-5
+x = 0
+total = 0
+while  x <= 1000
+  total += x
+  x += 1
+end
+puts('合計は、' + total.to_s + 'です。')
+
+
+--------------------------------------
+
+
+▼リストA-6
+arr = [0, 10, 20, 30]
+total = arr[0] + arr[1] + arr[2] + arr[3]
+puts '配列の合計：' + total.to_s
+
+
+--------------------------------------
+
+
+▼リストA-7
+arr = [95, 87, 69, 54, 71]
+total = 0
+for val in arr
+  total += val
+end
+puts '合計：' + total.to_s
+puts '平均：' + (total / 5).to_s
+
+
+--------------------------------------
+
+
+▼リストA-8
+total = 0
+for item in 1..1000
+  total += item
+end
+puts '合計：' + total.to_s
+
+
+--------------------------------------
+
+
+▼リストA-9
+arr = {'A' =>'Hello', 'B' => 'Welcome', 'C' => 'Bye!'}
+for item in arr
+  puts item[0] + ":" + item[1]
+end
+
+
+--------------------------------------
+
+
+▼リストA-10 
+arr = {'A' =>'Hello', 'B' => 'Welcome', 'C' => 'Bye!'}
+arr.each do |key, val|
+  puts key + ":" + val
+end
+
+
+--------------------------------------
+
+
+▼リストA-11
+def hello
+  puts "Hello!"
+end
+
+hello
+hello
+hello
+
+
+--------------------------------------
+
+
+▼リストA-12
+def hello name
+  puts "Hello, " + name + "!"
+end
+
+hello "Taro"
+hello "Hanako"
+
+
+--------------------------------------
+
+
+▼リストA-13
+def hello(name)
+  puts "Hello, " + name + "!"
+end
+
+hello("Taro")
+hello ("Hanako")
+
+
+--------------------------------------
+
+
+▼リストA-14
+def hello name
+  return "Hello, " + name + "!"
+end
+
+taro = hello "Taro"
+hanako = hello "Hanako"
+
+puts "<<< " + taro + hanako + ">>>"
+
+
+--------------------------------------
+
+
+▼リストA-15
+class Hello
+  def say
+    puts "Hello!!"
+  end
+
+  def sayTo name
+    puts "Hello, " + name + "!!"
+  end
+end
+
+obj = Hello.new
+obj.say
+obj.sayTo "花子"
+
+
+--------------------------------------
+
+
+▼リストA-16
+class Hello
+
+  def initialize name="noname"
+    @name = name
+  end
+
+  def say
+    puts "Hello, " + @name + "!!"
+  end
+
+end
+
+ob1 = Hello.new "花子"
+ob2 = Hello.new "太郎"
+ob1.say
+ob2.say
+
+
+--------------------------------------
+
+
+▼リストA-17
+class Hello
+  def initialize name="noname"
+    @name = name
+  end
+
+  def say
+    puts "Hello, " + @name + "!!"
+  end
+end
+
+
+--------------------------------------
+
+
+▼リストA-18
+class Hello
+  attr_accessor:name
+
+  def initialize name="noname"
+    @name = name
+  end
+
+  def say
+    puts "Hello, " + @name + "!!"
+  end
+end
+
+ob1 = Hello.new "花子"
+ob1.say
+ob1.name = "幸子"
+ob1.say
+
+
+--------------------------------------
+
+
+▼リストA-19
+class Tax
+  @@zeiritsu = 0.1
+
+  def self.zeiritsu= n
+    @@zeiritsu = n
+  end
+
+  def self.priceWithTax price
+    return (price * (1.0 + @@zeiritsu)).to_i
+  end
+
+  def self.tax price
+    return (price * @@zeiritsu).to_i
+  end
+end
+ 
+price = 12300
+puts "価格：" + price.to_s
+puts "税込：" + Tax.priceWithTax(price).to_s
+puts "税額：" + Tax.tax(price).to_s
+Tax.zeiritsu = 0.08
+puts "※軽減税率だと……"
+puts "税込：" + Tax.priceWithTax(price).to_s
+puts "税額：" + Tax.tax(price).to_s
+
+
+--------------------------------------
+
+
+▼リストA-20
+class People
+  def initialize name = "noname"
+    @name = name.to_s
+  end
+
+  def print
+    puts "NAME: " + @name
+  end
+end
+ 
+class People2 < People
+  def initialize name = "noname", age = 0
+    @name = name
+    @age = age.to_i
+  end
+
+  def print
+    puts "My name is " + @name + ". I'm " + @age.to_s + " old."
+  end
+end
+ 
+taro = People.new "taro"
+hanako = People2.new "Hanako",24
+taro.print
+hanako.print
+
+
+--------------------------------------
