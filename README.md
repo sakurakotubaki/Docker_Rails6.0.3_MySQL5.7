@@ -73,6 +73,8 @@ docker-compose run app rails new . --force --databas
 
 ## db設定を変更します。
 - databse.yml
-  username: root
-  password: root #docker-compose.ymlのMYSQL_ROOT_PASSWORD
-  host: db #docker-compose.ymlのサービス名
+```
+username: root
+password: root #docker-compose.ymlのMYSQL_ROOT_PASSWORD
+host: db #docker-compose.ymlのサービス名
+```
