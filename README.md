@@ -8,14 +8,14 @@
 ## ファイルの用意
 Gemfile Gemfile.lock Dockerfile docker-compose.yml を作成します。
 
-**Gmefile**
+## Gmefile
 source "https://rubygems.org"
 gem "rails", "6.0.2"
 
-**Gemfile.lock**
+## Gemfile.lock
 何も書かない。
 
-**Dockerfile**
+## Dockerfile
 FROM ruby:2.7.0
 
 RUN apt-get update -qq && \
@@ -41,7 +41,7 @@ WORKDIR /app
 
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
 
-**docker-compose.yml**
+## docker-compose.yml
 version: '3'
 services:
   db:
