@@ -5,6 +5,9 @@
 - Rails6.0.3
 - MySQL5.7
 
+## プロジェクトフォルダを作る
+mkdir Rails_MySQL5.7_Docker
+
 ## ファイルの用意
 Gemfile Gemfile.lock Dockerfile docker-compose.yml を作成します。
 
@@ -64,3 +67,12 @@ services:
       - db
 volumes:
   mysql_vol:
+  
+## プロジェクトフォルダの中でrails appを作成
+docker-compose run app rails new . --force --databas
+
+db設定を変更します。
+**databse.yml**
+  username: root
+  password: root #docker-compose.ymlのMYSQL_ROOT_PASSWORD
+  host: db #docker-compose.ymlのサービス名
