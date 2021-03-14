@@ -76,8 +76,9 @@ volumes:
 ```
   
 ## プロジェクトフォルダの中でrails appを作成
-docker-compose run app rails new . --force --database=mysql
-
+```
+$ docker-compose run app rails new . --force --database=mysql
+```
 ## db設定を変更します。
 - databse.yml
 ```
