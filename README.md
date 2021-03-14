@@ -1,7 +1,9 @@
-# README
+# Rails2.6.6 Rails6.0.3 Docker環境でシンプルCRUD実装
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## 作成環境
+- Ruby2.6.6
+- Rails6.0.3
+- MySQL5.7
 
 Things you may want to cover:
 
