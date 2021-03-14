@@ -19,6 +19,7 @@ gem "rails", "6.0.2"
 何も書かない。
 
 ## Dockerfile
+```
 FROM ruby:2.7.0
 
 RUN apt-get update -qq && \
@@ -43,8 +44,10 @@ ADD . /app
 WORKDIR /app
 
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
+```
 
 ## docker-compose.yml
+```
 version: '3'
 services:
   db:
@@ -67,6 +70,7 @@ services:
       - db
 volumes:
   mysql_vol:
+```
   
 ## プロジェクトフォルダの中でrails appを作成
 docker-compose run app rails new . --force --databas
