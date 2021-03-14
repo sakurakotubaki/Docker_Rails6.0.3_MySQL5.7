@@ -87,7 +87,16 @@ $ docker-compose build
 
 ## modelを作成
 ```
-$ docker-compose run app rails g model List title:string description:string
+$ docker-compose run app rails g model person name:text age:integer mail:text
 $ docker-compose run app rails db:create
 $ docker-compose run app rails db:migrate
+```
+
+## controllerを作成
+```
+$ docker-compose run app rails g controller people index show edit add 
+```
+## dockerを起動する
+```
+$ docker-compose up
 ```
