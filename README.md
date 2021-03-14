@@ -16,14 +16,14 @@ $ touch Gemfile Gemfile.lock Dockerfile docker-compose.yml
 
 ## Gmefile
 source "https://rubygems.org"
-gem "rails", "6.0.2"
+gem "rails", "6.0.3"
 
 ## Gemfile.lock
 何も書かない。
 
 ## Dockerfile
 ```
-FROM ruby:2.7.0
+FROM ruby:2.6.6
 
 RUN apt-get update -qq && \
 apt-get install -y \
